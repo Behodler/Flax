@@ -1,0 +1,9 @@
+ - test non owner cannot set minters
+ - test non minters cannot mint
+ - test minters can mint and that event shows transfer from address zero to recipient
+ - set a minter and then toggle the minter back to false. Assert the former minter can not mint.
+ - test that burning too much reverts
+ - test burning nothing does nothing. No revert.
+ - test burning positive amount for user with sufficient balance has balance and total supply reduced by amount. Assert Transfer from holder to address(0)
+ - test that burning the entire supply sends total supply to zero and does not revert.
+ - test that approving for X and then for Y sets the allowance to Y and not to X+Y.

@@ -1,17 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import {UnauthorizedMinter} from "./Errors.sol";
 
 contract Coupon is ERC20, Ownable {
     mapping(address => bool) public minters;
 
-    // Custom error for failed minting right checks
-    error UnauthorizedMinter(address minter, bool hasMintingRight);
-
-    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
-        _setupDecimals(18);
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) Ownable(msg.sender) {
     }
 
     function setMinter(address minter, bool canMint) public onlyOwner {
