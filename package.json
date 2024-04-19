@@ -1,0 +1,30 @@
+{
+  "name": "coupon",
+  "version": "1.0.0",
+  "description": "**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**",
+  "main": "extractAbis.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "extract-abis": "node extractAbis.js",
+    "generate-types": "typechain --target ethers-v5 --out-dir types/ethers './abis/*.abi.json'",
+    "build": "forge build && yarn run extract-abis && yarn run generate-types"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gititGoro/Coupon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gititGoro/Coupon/issues"
+  },
+  "homepage": "https://github.com/gititGoro/Coupon#readme",
+  "dependencies": {
+    "@typechain/ethers-v5": "^11.1.2",
+    "typechain": "^8.3.2"
+  }
+}
