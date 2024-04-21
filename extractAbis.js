@@ -24,7 +24,7 @@ function extractAbis(directory) {
             const artifact = JSON.parse(content);
 
             if (artifact.abi) {
-                const outputName = `${path.basename(directory)}-${path.basename(entry.name, '.json')}.abi.json`;
+                const outputName = `${entry.name}`;
                 const abiFilePath = path.join(abisDir, outputName);
                 fs.writeFileSync(abiFilePath, JSON.stringify(artifact.abi, null, 2), 'utf8');
                 console.log(`ABI extracted: ${abiFilePath}`);

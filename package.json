@@ -9,7 +9,8 @@
   },
   "scripts": {
     "extract-abis": "node extractAbis.js",
-    "generate-types": "typechain --target ethers-v5 --out-dir types/ethers './abis/*.abi.json'",
+    "anviltest": "gnome-terminal",
+    "generate-types": "typechain --target ethers-v5 --out-dir types/ethers './abis/*.json'",
     "build": "forge build && yarn run extract-abis && yarn run generate-types"
   },
   "repository": {
@@ -25,6 +26,7 @@
   "homepage": "https://github.com/gititGoro/Coupon#readme",
   "dependencies": {
     "@typechain/ethers-v5": "^11.1.2",
+    "redis": "^4.6.13",
     "typechain": "^8.3.2"
   }
 }
