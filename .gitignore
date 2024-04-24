@@ -14,3 +14,4 @@ docs/
 .env
 
 script/output
+node_modules

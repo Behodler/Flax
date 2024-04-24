@@ -60,3 +60,5 @@ forge script ./DeployContracts.s.sol --tc DeployContracts --broadcast --rpc-url=
 # # Step 3: Run a Node.js script to read addresses.json and update Redis
 echo "executing node script"
 node updateRedis.js
+sleep 5
+node expressServer

@@ -62,21 +62,18 @@ Gas Limit
 Genesis Timestamp
 ==================
 [32m
-1713916750[0m
+1713923289[0m
 
 Listening on 127.0.0.1:8545
 eth_getTransactionCount
 eth_blockNumber
 eth_chainId
-eth_getBlockByNumber
 eth_gasPrice
+eth_getBlockByNumber
 eth_blockNumber
 eth_chainId
 eth_gasPrice
 eth_getBlockByNumber
-eth_getTransactionCount
-eth_getCode
-eth_getBalance
 eth_getBalance
 eth_getTransactionCount
 eth_getCode
@@ -87,8 +84,8 @@ eth_getTransactionCount
 eth_getBalance
 eth_getCode
 eth_getTransactionCount
-eth_getBalance
 eth_getCode
+eth_getBalance
 eth_getTransactionCount
 eth_getBalance
 eth_getCode
@@ -98,6 +95,9 @@ eth_getCode
 eth_getTransactionCount
 eth_getBalance
 eth_getCode
+eth_getCode
+eth_getBalance
+eth_getTransactionCount
 eth_chainId
 eth_chainId
 eth_blockNumber
@@ -115,8 +115,8 @@ eth_sendRawTransaction
     Gas used: 714446
 
     Block Number: 1
-    Block Hash: 0x40df0579a11647f5442aa70328fe07a67d13a7195fa551ab3d4b859d2aba5a4e
-    Block Time: "Tue, 23 Apr 2024 23:59:15 +0000"
+    Block Hash: 0xde5cca34fa80b81d93e20996a765eafbe16158f9362bf1f13731e3ec5acc52ff
+    Block Time: "Wed, 24 Apr 2024 01:48:14 +0000"
 
 
     Transaction: 0x5e9b841645d17f27d8bcc36eccfdff7ba052acdbd56398c7839df33aad8cfb3f
@@ -124,8 +124,8 @@ eth_sendRawTransaction
     Gas used: 591320
 
     Block Number: 2
-    Block Hash: 0xd85ec4046c181c30f3547ba7f3b79b4d197fafefd8cf01629ac89759508a2250
-    Block Time: "Tue, 23 Apr 2024 23:59:16 +0000"
+    Block Hash: 0x910f20c286786dcc18acc83f38e1e8dc1e2e0f8ffafc652d3fe84493f1f83cf8
+    Block Time: "Wed, 24 Apr 2024 01:48:15 +0000"
 
 eth_getTransactionReceipt
 eth_getTransactionReceipt
