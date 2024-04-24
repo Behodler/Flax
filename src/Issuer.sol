@@ -40,6 +40,18 @@ contract Issuer is Ownable {
         couponContract = ICoupon(couponAddress);
     }
 
+    //If we list poolTogether tokens and Issuer wins, we want to burn the EYE prize
+    function burnBurnable(address tokenAddress) public {
+        require(
+            whitelist[tokenAddress].enabled && whitelist[tokenAddress].burnable,
+            "Only burnable tokens"
+        );
+        uint balance = ICoupon(tokenAddress).balanceOf(address(this));
+        try ICoupon(tokenAddress).burn(balance) {} catch {
+            revert("Failed to burn the input token");
+        }
+    }
+
     function setTokenInfo(
         address token,
         bool enabled,

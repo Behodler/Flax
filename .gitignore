@@ -15,3 +15,5 @@ docs/
 
 script/output
 node_modules
+
+*.log

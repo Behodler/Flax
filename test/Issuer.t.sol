@@ -32,7 +32,7 @@ contract IssuerTest is Test {
         couponContract = new Coupon("Coupon", "CPN");
         issuer = new Issuer(address(couponContract));
         couponContract.setMinter(address(issuer), true);
-        
+
         burnableToken.mint(address(this), 1e18); // 1 token
         nonBurnableToken.mint(address(this), 1e18); // 1 token
 
@@ -42,18 +42,58 @@ contract IssuerTest is Test {
         notOwner = address(0x1);
     }
 
+    function testFail_burnNonWhitelistedToken() public {
+        MockToken nonListedToken = new MockToken("Non-Listed Token", "NLT");
+        issuer.burnBurnable(address(nonListedToken));
+    }
+
+    function testFail_burnNonBurnableToken() public {
+        issuer.burnBurnable(address(nonBurnableToken));
+    }
+
+    function test_burnBurnableToken() public {
+        uint256 initialBalance = 1000 * 10 ** 18;
+        burnableToken.mint(address(issuer), initialBalance);
+
+        assertEq(burnableToken.balanceOf(address(issuer)), initialBalance);
+        issuer.burnBurnable(address(burnableToken));
+        assertEq(
+            burnableToken.balanceOf(address(issuer)),
+            0,
+            "Token should be completely burned"
+        );
+    }
+
+    function test_burnZeroBalance() public {
+        assertEq(burnableToken.balanceOf(address(issuer)), 0);
+        issuer.burnBurnable(address(burnableToken)); // Should not fail, but no action is needed
+        assertEq(
+            burnableToken.balanceOf(address(issuer)),
+            0,
+            "Balance should still be zero"
+        );
+    }
+
     function testIssueBurnableToken() public {
         vm.prank(owner);
         burnableToken.approve(address(issuer), 1e18);
         issuer.issue(address(burnableToken), 1e18);
-        assertEq(couponContract.balanceOf(address(this)), 1e18, "Coupons should be minted");
+        assertEq(
+            couponContract.balanceOf(address(this)),
+            1e18,
+            "Coupons should be minted"
+        );
     }
 
     function testIssueNonBurnableToken() public {
         vm.prank(owner);
         nonBurnableToken.approve(address(issuer), 1e18);
         issuer.issue(address(nonBurnableToken), 1e18);
-        assertEq(couponContract.balanceOf(address(this)), 1e18, "Coupons should be minted");
+        assertEq(
+            couponContract.balanceOf(address(this)),
+            1e18,
+            "Coupons should be minted"
+        );
     }
 
     function testIssueFailOnDisabledToken() public {
@@ -74,10 +114,12 @@ contract IssuerTest is Test {
 
     function testAccessControl() public {
         vm.startPrank(address(0x1));
-        vm.expectRevert(         abi.encodeWithSelector(
+        vm.expectRevert(
+            abi.encodeWithSelector(
                 Ownable.OwnableUnauthorizedAccount.selector,
                 notOwner
-            ));
+            )
+        );
         issuer.setTokenInfo(address(burnableToken), true, true, 2e12); // Should revert
         vm.stopPrank();
     }

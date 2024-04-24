@@ -1,7 +1,17 @@
 const express = require('express');
+const cors = require('cors');
 const redis = require('redis');
 const app = express();
 const port = 3010;
+
+// Configure CORS options
+const corsOptions = {
+    origin: 'http://localhost:3010', // Allow all requests from your React app
+    optionsSuccessStatus: 200 // For legacy browser support
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 
 // Create a Redis client
 const client = redis.createClient({
