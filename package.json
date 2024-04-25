@@ -27,6 +27,7 @@
   "homepage": "https://github.com/gititGoro/Coupon#readme",
   "dependencies": {
     "@typechain/ethers-v5": "^11.1.2",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "redis": "^4.6.13",
     "typechain": "^8.3.2"
