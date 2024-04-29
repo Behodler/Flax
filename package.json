@@ -8,11 +8,12 @@
     "test": "test"
   },
   "scripts": {
+    "compile-abi-file": "node compileABIs.js",
     "extract-abis": "node extractAbis.js",
-    "anvil-deploy": "./script/anvilUpAndDeploy.sh ",
+    "anvil-up": "./script/anvilUpAndDeploy.sh ",
     "anvil-down": "./script/anvilDown.sh",
     "generate-types": "typechain --target ethers-v5 --out-dir types/ethers './abis/*.json'",
-    "build": "forge build && yarn run extract-abis && yarn run generate-types"
+    "build": "forge build && yarn run extract-abis && yarn compile-abi-file &&yarn run generate-types"
   },
   "repository": {
     "type": "git",

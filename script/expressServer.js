@@ -6,7 +6,7 @@ const port = 3010;
 
 // Configure CORS options
 const corsOptions = {
-    origin: 'http://localhost:3010', // Allow all requests from your React app
+    origin: 'http://localhost:3000', // Allow all requests from your React app
     optionsSuccessStatus: 200 // For legacy browser support
 };
 

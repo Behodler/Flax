@@ -29,6 +29,7 @@ import type {
 export interface IssuerInterface extends utils.Interface {
   functions: {
     "MaxIssuancePerDay()": FunctionFragment;
+    "burnBurnable(address)": FunctionFragment;
     "couponContract()": FunctionFragment;
     "issuancePerTokenPerDay(address)": FunctionFragment;
     "issue(address,uint256)": FunctionFragment;
@@ -44,6 +45,7 @@ export interface IssuerInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "MaxIssuancePerDay"
+      | "burnBurnable"
       | "couponContract"
       | "issuancePerTokenPerDay"
       | "issue"
@@ -59,6 +61,10 @@ export interface IssuerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "MaxIssuancePerDay",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "burnBurnable",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "couponContract",
@@ -97,6 +103,10 @@ export interface IssuerInterface extends utils.Interface {
 
   decodeFunctionResult(
     functionFragment: "MaxIssuancePerDay",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "burnBurnable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -211,6 +221,11 @@ export interface Issuer extends BaseContract {
   functions: {
     MaxIssuancePerDay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    burnBurnable(
+      tokenAddress: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     couponContract(overrides?: CallOverrides): Promise<[string]>;
 
     issuancePerTokenPerDay(
@@ -272,6 +287,11 @@ export interface Issuer extends BaseContract {
 
   MaxIssuancePerDay(overrides?: CallOverrides): Promise<BigNumber>;
 
+  burnBurnable(
+    tokenAddress: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   couponContract(overrides?: CallOverrides): Promise<string>;
 
   issuancePerTokenPerDay(
@@ -332,6 +352,11 @@ export interface Issuer extends BaseContract {
 
   callStatic: {
     MaxIssuancePerDay(overrides?: CallOverrides): Promise<BigNumber>;
+
+    burnBurnable(
+      tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     couponContract(overrides?: CallOverrides): Promise<string>;
 
@@ -432,6 +457,11 @@ export interface Issuer extends BaseContract {
   estimateGas: {
     MaxIssuancePerDay(overrides?: CallOverrides): Promise<BigNumber>;
 
+    burnBurnable(
+      tokenAddress: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     couponContract(overrides?: CallOverrides): Promise<BigNumber>;
 
     issuancePerTokenPerDay(
@@ -479,6 +509,11 @@ export interface Issuer extends BaseContract {
 
   populateTransaction: {
     MaxIssuancePerDay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    burnBurnable(
+      tokenAddress: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
 
     couponContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

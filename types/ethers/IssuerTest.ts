@@ -56,10 +56,14 @@ export interface IssuerTestInterface extends utils.Interface {
     "targetSelectors()": FunctionFragment;
     "targetSenders()": FunctionFragment;
     "testAccessControl()": FunctionFragment;
+    "testFail_burnNonBurnableToken()": FunctionFragment;
+    "testFail_burnNonWhitelistedToken()": FunctionFragment;
     "testIssueBurnableToken()": FunctionFragment;
     "testIssueFailOnDisabledToken()": FunctionFragment;
     "testIssueNonBurnableToken()": FunctionFragment;
     "testMintingExceedsLimit()": FunctionFragment;
+    "test_burnBurnableToken()": FunctionFragment;
+    "test_burnZeroBalance()": FunctionFragment;
   };
 
   getFunction(
@@ -77,10 +81,14 @@ export interface IssuerTestInterface extends utils.Interface {
       | "targetSelectors"
       | "targetSenders"
       | "testAccessControl"
+      | "testFail_burnNonBurnableToken"
+      | "testFail_burnNonWhitelistedToken"
       | "testIssueBurnableToken"
       | "testIssueFailOnDisabledToken"
       | "testIssueNonBurnableToken"
       | "testMintingExceedsLimit"
+      | "test_burnBurnableToken"
+      | "test_burnZeroBalance"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "IS_TEST", values?: undefined): string;
@@ -127,6 +135,14 @@ export interface IssuerTestInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "testFail_burnNonBurnableToken",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "testFail_burnNonWhitelistedToken",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "testIssueBurnableToken",
     values?: undefined
   ): string;
@@ -140,6 +156,14 @@ export interface IssuerTestInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "testMintingExceedsLimit",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_burnBurnableToken",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_burnZeroBalance",
     values?: undefined
   ): string;
 
@@ -187,6 +211,14 @@ export interface IssuerTestInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "testFail_burnNonBurnableToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "testFail_burnNonWhitelistedToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "testIssueBurnableToken",
     data: BytesLike
   ): Result;
@@ -200,6 +232,14 @@ export interface IssuerTestInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "testMintingExceedsLimit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_burnBurnableToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_burnZeroBalance",
     data: BytesLike
   ): Result;
 
@@ -565,6 +605,14 @@ export interface IssuerTest extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    testFail_burnNonBurnableToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    testFail_burnNonWhitelistedToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     testIssueBurnableToken(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
@@ -578,6 +626,14 @@ export interface IssuerTest extends BaseContract {
     ): Promise<ContractTransaction>;
 
     testMintingExceedsLimit(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_burnBurnableToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_burnZeroBalance(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
@@ -618,6 +674,14 @@ export interface IssuerTest extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  testFail_burnNonBurnableToken(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  testFail_burnNonWhitelistedToken(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   testIssueBurnableToken(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
@@ -631,6 +695,14 @@ export interface IssuerTest extends BaseContract {
   ): Promise<ContractTransaction>;
 
   testMintingExceedsLimit(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_burnBurnableToken(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_burnZeroBalance(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -667,6 +739,10 @@ export interface IssuerTest extends BaseContract {
 
     testAccessControl(overrides?: CallOverrides): Promise<void>;
 
+    testFail_burnNonBurnableToken(overrides?: CallOverrides): Promise<void>;
+
+    testFail_burnNonWhitelistedToken(overrides?: CallOverrides): Promise<void>;
+
     testIssueBurnableToken(overrides?: CallOverrides): Promise<void>;
 
     testIssueFailOnDisabledToken(overrides?: CallOverrides): Promise<void>;
@@ -674,6 +750,10 @@ export interface IssuerTest extends BaseContract {
     testIssueNonBurnableToken(overrides?: CallOverrides): Promise<void>;
 
     testMintingExceedsLimit(overrides?: CallOverrides): Promise<void>;
+
+    test_burnBurnableToken(overrides?: CallOverrides): Promise<void>;
+
+    test_burnZeroBalance(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -806,6 +886,14 @@ export interface IssuerTest extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    testFail_burnNonBurnableToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    testFail_burnNonWhitelistedToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     testIssueBurnableToken(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
@@ -819,6 +907,14 @@ export interface IssuerTest extends BaseContract {
     ): Promise<BigNumber>;
 
     testMintingExceedsLimit(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_burnBurnableToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_burnZeroBalance(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
@@ -856,6 +952,14 @@ export interface IssuerTest extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    testFail_burnNonBurnableToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    testFail_burnNonWhitelistedToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     testIssueBurnableToken(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
@@ -869,6 +973,14 @@ export interface IssuerTest extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     testMintingExceedsLimit(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_burnBurnableToken(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_burnZeroBalance(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

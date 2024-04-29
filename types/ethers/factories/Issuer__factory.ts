@@ -33,6 +33,19 @@ const _abi = [
   },
   {
     type: "function",
+    name: "burnBurnable",
+    inputs: [
+      {
+        name: "tokenAddress",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "couponContract",
     inputs: [],
     outputs: [

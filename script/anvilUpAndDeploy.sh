@@ -35,7 +35,7 @@ fi
 LOG_FILE="../anvil.log"
 
 # Start anvil in the background and redirect all output to log file
-anvil --port 8545 --accounts 10 > "$LOG_FILE" 2>&1 &
+anvil  --block-time 5 --port 8545 --accounts 10 > "$LOG_FILE" 2>&1 & 
 
 # # Get the PID of the anvil process
 ANVIL_PID=$!
@@ -58,7 +58,7 @@ sleep 5
 forge script ./DeployContracts.s.sol --tc DeployContracts --broadcast --rpc-url=http://localhost:8545 --json --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d | grep '^{.*}$' > ./output/addresses.json
 
 # # Step 3: Run a Node.js script to read addresses.json and update Redis
-echo "executing node script"
+# echo "executing node script"
 node updateRedis.js
-sleep 5
+# sleep 5
 node expressServer

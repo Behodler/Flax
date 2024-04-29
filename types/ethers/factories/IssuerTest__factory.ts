@@ -202,6 +202,20 @@ const _abi = [
   },
   {
     type: "function",
+    name: "testFail_burnNonBurnableToken",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "testFail_burnNonWhitelistedToken",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "testIssueBurnableToken",
     inputs: [],
     outputs: [],
@@ -224,6 +238,20 @@ const _abi = [
   {
     type: "function",
     name: "testMintingExceedsLimit",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "test_burnBurnableToken",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "test_burnZeroBalance",
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",
