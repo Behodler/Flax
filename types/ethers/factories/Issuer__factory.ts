@@ -20,13 +20,19 @@ const _abi = [
   },
   {
     type: "function",
-    name: "MaxIssuancePerDay",
-    inputs: [],
+    name: "allowanceIncreasers",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     outputs: [
       {
         name: "",
-        type: "uint256",
-        internalType: "uint256",
+        type: "bool",
+        internalType: "bool",
       },
     ],
     stateMutability: "view",
@@ -59,27 +65,16 @@ const _abi = [
   },
   {
     type: "function",
-    name: "issuancePerTokenPerDay",
+    name: "increaseAllowance",
     inputs: [
       {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "runningAmount",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "lastIssuedAt",
+        name: "amount",
         type: "uint256",
         internalType: "uint256",
       },
     ],
-    stateMutability: "view",
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -98,6 +93,19 @@ const _abi = [
     ],
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "mintAllowance",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -127,19 +135,6 @@ const _abi = [
         name: "newCouponAddress",
         type: "address",
         internalType: "address",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "setMaxIssuancePerDay",
-    inputs: [
-      {
-        name: "_maxIssuancePerDay",
-        type: "uint256",
-        internalType: "uint256",
       },
     ],
     outputs: [],
@@ -216,6 +211,24 @@ const _abi = [
     stateMutability: "view",
   },
   {
+    type: "function",
+    name: "whitelistAllowanceIncreasers",
+    inputs: [
+      {
+        name: "increaser",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "_whitelist",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
     type: "event",
     name: "CouponsIssued",
     inputs: [
@@ -239,12 +252,6 @@ const _abi = [
       },
       {
         name: "coupons",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256",
-      },
-      {
-        name: "runningAmount",
         type: "uint256",
         indexed: false,
         internalType: "uint256",
@@ -301,6 +308,33 @@ const _abi = [
       },
     ],
     anonymous: false,
+  },
+  {
+    type: "error",
+    name: "ExcessiveMinting",
+    inputs: [
+      {
+        name: "attemptedAmount",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "remaining",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "OnlyWhitelistedIncreasers",
+    inputs: [
+      {
+        name: "user",
+        type: "address",
+        internalType: "address",
+      },
+    ],
   },
   {
     type: "error",

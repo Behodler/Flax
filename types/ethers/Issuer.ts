@@ -28,39 +28,41 @@ import type {
 
 export interface IssuerInterface extends utils.Interface {
   functions: {
-    "MaxIssuancePerDay()": FunctionFragment;
+    "allowanceIncreasers(address)": FunctionFragment;
     "burnBurnable(address)": FunctionFragment;
     "couponContract()": FunctionFragment;
-    "issuancePerTokenPerDay(address)": FunctionFragment;
+    "increaseAllowance(uint256)": FunctionFragment;
     "issue(address,uint256)": FunctionFragment;
+    "mintAllowance()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
-    "setMaxIssuancePerDay(uint256)": FunctionFragment;
     "setTokenInfo(address,bool,bool,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "whitelist(address)": FunctionFragment;
+    "whitelistAllowanceIncreasers(address,bool)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "MaxIssuancePerDay"
+      | "allowanceIncreasers"
       | "burnBurnable"
       | "couponContract"
-      | "issuancePerTokenPerDay"
+      | "increaseAllowance"
       | "issue"
+      | "mintAllowance"
       | "owner"
       | "renounceOwnership"
       | "setCouponContract"
-      | "setMaxIssuancePerDay"
       | "setTokenInfo"
       | "transferOwnership"
       | "whitelist"
+      | "whitelistAllowanceIncreasers"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "MaxIssuancePerDay",
-    values?: undefined
+    functionFragment: "allowanceIncreasers",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "burnBurnable",
@@ -71,12 +73,16 @@ export interface IssuerInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "issuancePerTokenPerDay",
-    values: [string]
+    functionFragment: "increaseAllowance",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "issue",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintAllowance",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -88,10 +94,6 @@ export interface IssuerInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "setMaxIssuancePerDay",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setTokenInfo",
     values: [string, boolean, boolean, BigNumberish]
   ): string;
@@ -100,9 +102,13 @@ export interface IssuerInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(functionFragment: "whitelist", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "whitelistAllowanceIncreasers",
+    values: [string, boolean]
+  ): string;
 
   decodeFunctionResult(
-    functionFragment: "MaxIssuancePerDay",
+    functionFragment: "allowanceIncreasers",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -114,10 +120,14 @@ export interface IssuerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "issuancePerTokenPerDay",
+    functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "issue", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "mintAllowance",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -125,10 +135,6 @@ export interface IssuerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setCouponContract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setMaxIssuancePerDay",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -140,9 +146,13 @@ export interface IssuerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "whitelist", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "whitelistAllowanceIncreasers",
+    data: BytesLike
+  ): Result;
 
   events: {
-    "CouponsIssued(address,address,uint256,uint256,uint256)": EventFragment;
+    "CouponsIssued(address,address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "TokenWhitelisted(address,bool,bool,uint256)": EventFragment;
   };
@@ -157,10 +167,9 @@ export interface CouponsIssuedEventObject {
   token: string;
   amount: BigNumber;
   coupons: BigNumber;
-  runningAmount: BigNumber;
 }
 export type CouponsIssuedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber, BigNumber],
+  [string, string, BigNumber, BigNumber],
   CouponsIssuedEventObject
 >;
 
@@ -219,7 +228,10 @@ export interface Issuer extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    MaxIssuancePerDay(overrides?: CallOverrides): Promise<[BigNumber]>;
+    allowanceIncreasers(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     burnBurnable(
       tokenAddress: string,
@@ -228,21 +240,18 @@ export interface Issuer extends BaseContract {
 
     couponContract(overrides?: CallOverrides): Promise<[string]>;
 
-    issuancePerTokenPerDay(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        runningAmount: BigNumber;
-        lastIssuedAt: BigNumber;
-      }
-    >;
+    increaseAllowance(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
 
     issue(
       inputToken: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    mintAllowance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -252,11 +261,6 @@ export interface Issuer extends BaseContract {
 
     setCouponContract(
       newCouponAddress: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    setMaxIssuancePerDay(
-      _maxIssuancePerDay: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -283,9 +287,18 @@ export interface Issuer extends BaseContract {
         teraCouponPerToken: BigNumber;
       }
     >;
+
+    whitelistAllowanceIncreasers(
+      increaser: string,
+      _whitelist: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
   };
 
-  MaxIssuancePerDay(overrides?: CallOverrides): Promise<BigNumber>;
+  allowanceIncreasers(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   burnBurnable(
     tokenAddress: string,
@@ -294,21 +307,18 @@ export interface Issuer extends BaseContract {
 
   couponContract(overrides?: CallOverrides): Promise<string>;
 
-  issuancePerTokenPerDay(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber] & {
-      runningAmount: BigNumber;
-      lastIssuedAt: BigNumber;
-    }
-  >;
+  increaseAllowance(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   issue(
     inputToken: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -318,11 +328,6 @@ export interface Issuer extends BaseContract {
 
   setCouponContract(
     newCouponAddress: string,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  setMaxIssuancePerDay(
-    _maxIssuancePerDay: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -350,8 +355,17 @@ export interface Issuer extends BaseContract {
     }
   >;
 
+  whitelistAllowanceIncreasers(
+    increaser: string,
+    _whitelist: boolean,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
-    MaxIssuancePerDay(overrides?: CallOverrides): Promise<BigNumber>;
+    allowanceIncreasers(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     burnBurnable(
       tokenAddress: string,
@@ -360,15 +374,10 @@ export interface Issuer extends BaseContract {
 
     couponContract(overrides?: CallOverrides): Promise<string>;
 
-    issuancePerTokenPerDay(
-      arg0: string,
+    increaseAllowance(
+      amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber] & {
-        runningAmount: BigNumber;
-        lastIssuedAt: BigNumber;
-      }
-    >;
+    ): Promise<void>;
 
     issue(
       inputToken: string,
@@ -376,17 +385,14 @@ export interface Issuer extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     setCouponContract(
       newCouponAddress: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setMaxIssuancePerDay(
-      _maxIssuancePerDay: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -413,22 +419,26 @@ export interface Issuer extends BaseContract {
         teraCouponPerToken: BigNumber;
       }
     >;
+
+    whitelistAllowanceIncreasers(
+      increaser: string,
+      _whitelist: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
-    "CouponsIssued(address,address,uint256,uint256,uint256)"(
+    "CouponsIssued(address,address,uint256,uint256)"(
       user?: string | null,
       token?: string | null,
       amount?: null,
-      coupons?: null,
-      runningAmount?: null
+      coupons?: null
     ): CouponsIssuedEventFilter;
     CouponsIssued(
       user?: string | null,
       token?: string | null,
       amount?: null,
-      coupons?: null,
-      runningAmount?: null
+      coupons?: null
     ): CouponsIssuedEventFilter;
 
     "OwnershipTransferred(address,address)"(
@@ -455,7 +465,10 @@ export interface Issuer extends BaseContract {
   };
 
   estimateGas: {
-    MaxIssuancePerDay(overrides?: CallOverrides): Promise<BigNumber>;
+    allowanceIncreasers(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     burnBurnable(
       tokenAddress: string,
@@ -464,9 +477,9 @@ export interface Issuer extends BaseContract {
 
     couponContract(overrides?: CallOverrides): Promise<BigNumber>;
 
-    issuancePerTokenPerDay(
-      arg0: string,
-      overrides?: CallOverrides
+    increaseAllowance(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     issue(
@@ -474,6 +487,8 @@ export interface Issuer extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -483,11 +498,6 @@ export interface Issuer extends BaseContract {
 
     setCouponContract(
       newCouponAddress: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
-    setMaxIssuancePerDay(
-      _maxIssuancePerDay: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -505,10 +515,19 @@ export interface Issuer extends BaseContract {
     ): Promise<BigNumber>;
 
     whitelist(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    whitelistAllowanceIncreasers(
+      increaser: string,
+      _whitelist: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    MaxIssuancePerDay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    allowanceIncreasers(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     burnBurnable(
       tokenAddress: string,
@@ -517,9 +536,9 @@ export interface Issuer extends BaseContract {
 
     couponContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    issuancePerTokenPerDay(
-      arg0: string,
-      overrides?: CallOverrides
+    increaseAllowance(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     issue(
@@ -527,6 +546,8 @@ export interface Issuer extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    mintAllowance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -536,11 +557,6 @@ export interface Issuer extends BaseContract {
 
     setCouponContract(
       newCouponAddress: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    setMaxIssuancePerDay(
-      _maxIssuancePerDay: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -560,6 +576,12 @@ export interface Issuer extends BaseContract {
     whitelist(
       arg0: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    whitelistAllowanceIncreasers(
+      increaser: string,
+      _whitelist: boolean,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

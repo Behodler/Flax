@@ -55,15 +55,18 @@ export interface IssuerTestInterface extends utils.Interface {
     "targetInterfaces()": FunctionFragment;
     "targetSelectors()": FunctionFragment;
     "targetSenders()": FunctionFragment;
-    "testAccessControl()": FunctionFragment;
-    "testFail_burnNonBurnableToken()": FunctionFragment;
-    "testFail_burnNonWhitelistedToken()": FunctionFragment;
-    "testIssueBurnableToken()": FunctionFragment;
-    "testIssueFailOnDisabledToken()": FunctionFragment;
-    "testIssueNonBurnableToken()": FunctionFragment;
-    "testMintingExceedsLimit()": FunctionFragment;
-    "test_burnBurnableToken()": FunctionFragment;
-    "test_burnZeroBalance()": FunctionFragment;
+    "testFail_burn_non_burnable_token()": FunctionFragment;
+    "testFail_burn_non_whitelisted_token()": FunctionFragment;
+    "test_access_control()": FunctionFragment;
+    "test_burn_burnable_token()": FunctionFragment;
+    "test_burn_zero_balance()": FunctionFragment;
+    "test_increaser_can_increase_approvals()": FunctionFragment;
+    "test_issue_burnable_token()": FunctionFragment;
+    "test_issue_fail_on_disabled_token()": FunctionFragment;
+    "test_issue_non_burnable_token()": FunctionFragment;
+    "test_minting_exceeds_limit()": FunctionFragment;
+    "test_non_approved_increaser_cannot_increase()": FunctionFragment;
+    "test_non_owner_cannot_whitelist_increasers()": FunctionFragment;
   };
 
   getFunction(
@@ -80,15 +83,18 @@ export interface IssuerTestInterface extends utils.Interface {
       | "targetInterfaces"
       | "targetSelectors"
       | "targetSenders"
-      | "testAccessControl"
-      | "testFail_burnNonBurnableToken"
-      | "testFail_burnNonWhitelistedToken"
-      | "testIssueBurnableToken"
-      | "testIssueFailOnDisabledToken"
-      | "testIssueNonBurnableToken"
-      | "testMintingExceedsLimit"
-      | "test_burnBurnableToken"
-      | "test_burnZeroBalance"
+      | "testFail_burn_non_burnable_token"
+      | "testFail_burn_non_whitelisted_token"
+      | "test_access_control"
+      | "test_burn_burnable_token"
+      | "test_burn_zero_balance"
+      | "test_increaser_can_increase_approvals"
+      | "test_issue_burnable_token"
+      | "test_issue_fail_on_disabled_token"
+      | "test_issue_non_burnable_token"
+      | "test_minting_exceeds_limit"
+      | "test_non_approved_increaser_cannot_increase"
+      | "test_non_owner_cannot_whitelist_increasers"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "IS_TEST", values?: undefined): string;
@@ -131,39 +137,51 @@ export interface IssuerTestInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testAccessControl",
+    functionFragment: "testFail_burn_non_burnable_token",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testFail_burnNonBurnableToken",
+    functionFragment: "testFail_burn_non_whitelisted_token",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testFail_burnNonWhitelistedToken",
+    functionFragment: "test_access_control",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testIssueBurnableToken",
+    functionFragment: "test_burn_burnable_token",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testIssueFailOnDisabledToken",
+    functionFragment: "test_burn_zero_balance",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testIssueNonBurnableToken",
+    functionFragment: "test_increaser_can_increase_approvals",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "testMintingExceedsLimit",
+    functionFragment: "test_issue_burnable_token",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "test_burnBurnableToken",
+    functionFragment: "test_issue_fail_on_disabled_token",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "test_burnZeroBalance",
+    functionFragment: "test_issue_non_burnable_token",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_minting_exceeds_limit",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_non_approved_increaser_cannot_increase",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_non_owner_cannot_whitelist_increasers",
     values?: undefined
   ): string;
 
@@ -207,39 +225,51 @@ export interface IssuerTestInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testAccessControl",
+    functionFragment: "testFail_burn_non_burnable_token",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testFail_burnNonBurnableToken",
+    functionFragment: "testFail_burn_non_whitelisted_token",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testFail_burnNonWhitelistedToken",
+    functionFragment: "test_access_control",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testIssueBurnableToken",
+    functionFragment: "test_burn_burnable_token",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testIssueFailOnDisabledToken",
+    functionFragment: "test_burn_zero_balance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testIssueNonBurnableToken",
+    functionFragment: "test_increaser_can_increase_approvals",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "testMintingExceedsLimit",
+    functionFragment: "test_issue_burnable_token",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "test_burnBurnableToken",
+    functionFragment: "test_issue_fail_on_disabled_token",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "test_burnZeroBalance",
+    functionFragment: "test_issue_non_burnable_token",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_minting_exceeds_limit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_non_approved_increaser_cannot_increase",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_non_owner_cannot_whitelist_increasers",
     data: BytesLike
   ): Result;
 
@@ -601,39 +631,51 @@ export interface IssuerTest extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string[]] & { targetedSenders_: string[] }>;
 
-    testAccessControl(
+    testFail_burn_non_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    testFail_burnNonBurnableToken(
+    testFail_burn_non_whitelisted_token(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    testFail_burnNonWhitelistedToken(
+    test_access_control(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    testIssueBurnableToken(
+    test_burn_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    testIssueFailOnDisabledToken(
+    test_burn_zero_balance(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    testIssueNonBurnableToken(
+    test_increaser_can_increase_approvals(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    testMintingExceedsLimit(
+    test_issue_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    test_burnBurnableToken(
+    test_issue_fail_on_disabled_token(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    test_burnZeroBalance(
+    test_issue_non_burnable_token(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_minting_exceeds_limit(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_non_approved_increaser_cannot_increase(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_non_owner_cannot_whitelist_increasers(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
@@ -670,39 +712,51 @@ export interface IssuerTest extends BaseContract {
 
   targetSenders(overrides?: CallOverrides): Promise<string[]>;
 
-  testAccessControl(
+  testFail_burn_non_burnable_token(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  testFail_burnNonBurnableToken(
+  testFail_burn_non_whitelisted_token(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  testFail_burnNonWhitelistedToken(
+  test_access_control(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  testIssueBurnableToken(
+  test_burn_burnable_token(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  testIssueFailOnDisabledToken(
+  test_burn_zero_balance(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  testIssueNonBurnableToken(
+  test_increaser_can_increase_approvals(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  testMintingExceedsLimit(
+  test_issue_burnable_token(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  test_burnBurnableToken(
+  test_issue_fail_on_disabled_token(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  test_burnZeroBalance(
+  test_issue_non_burnable_token(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_minting_exceeds_limit(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_non_approved_increaser_cannot_increase(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_non_owner_cannot_whitelist_increasers(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -737,23 +791,37 @@ export interface IssuerTest extends BaseContract {
 
     targetSenders(overrides?: CallOverrides): Promise<string[]>;
 
-    testAccessControl(overrides?: CallOverrides): Promise<void>;
+    testFail_burn_non_burnable_token(overrides?: CallOverrides): Promise<void>;
 
-    testFail_burnNonBurnableToken(overrides?: CallOverrides): Promise<void>;
+    testFail_burn_non_whitelisted_token(
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    testFail_burnNonWhitelistedToken(overrides?: CallOverrides): Promise<void>;
+    test_access_control(overrides?: CallOverrides): Promise<void>;
 
-    testIssueBurnableToken(overrides?: CallOverrides): Promise<void>;
+    test_burn_burnable_token(overrides?: CallOverrides): Promise<void>;
 
-    testIssueFailOnDisabledToken(overrides?: CallOverrides): Promise<void>;
+    test_burn_zero_balance(overrides?: CallOverrides): Promise<void>;
 
-    testIssueNonBurnableToken(overrides?: CallOverrides): Promise<void>;
+    test_increaser_can_increase_approvals(
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    testMintingExceedsLimit(overrides?: CallOverrides): Promise<void>;
+    test_issue_burnable_token(overrides?: CallOverrides): Promise<void>;
 
-    test_burnBurnableToken(overrides?: CallOverrides): Promise<void>;
+    test_issue_fail_on_disabled_token(overrides?: CallOverrides): Promise<void>;
 
-    test_burnZeroBalance(overrides?: CallOverrides): Promise<void>;
+    test_issue_non_burnable_token(overrides?: CallOverrides): Promise<void>;
+
+    test_minting_exceeds_limit(overrides?: CallOverrides): Promise<void>;
+
+    test_non_approved_increaser_cannot_increase(
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    test_non_owner_cannot_whitelist_increasers(
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -882,39 +950,51 @@ export interface IssuerTest extends BaseContract {
 
     targetSenders(overrides?: CallOverrides): Promise<BigNumber>;
 
-    testAccessControl(
+    testFail_burn_non_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    testFail_burnNonBurnableToken(
+    testFail_burn_non_whitelisted_token(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    testFail_burnNonWhitelistedToken(
+    test_access_control(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    testIssueBurnableToken(
+    test_burn_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    testIssueFailOnDisabledToken(
+    test_burn_zero_balance(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    testIssueNonBurnableToken(
+    test_increaser_can_increase_approvals(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    testMintingExceedsLimit(
+    test_issue_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    test_burnBurnableToken(
+    test_issue_fail_on_disabled_token(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    test_burnZeroBalance(
+    test_issue_non_burnable_token(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_minting_exceeds_limit(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_non_approved_increaser_cannot_increase(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_non_owner_cannot_whitelist_increasers(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
@@ -948,39 +1028,51 @@ export interface IssuerTest extends BaseContract {
 
     targetSenders(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    testAccessControl(
+    testFail_burn_non_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    testFail_burnNonBurnableToken(
+    testFail_burn_non_whitelisted_token(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    testFail_burnNonWhitelistedToken(
+    test_access_control(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    testIssueBurnableToken(
+    test_burn_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    testIssueFailOnDisabledToken(
+    test_burn_zero_balance(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    testIssueNonBurnableToken(
+    test_increaser_can_increase_approvals(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    testMintingExceedsLimit(
+    test_issue_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    test_burnBurnableToken(
+    test_issue_fail_on_disabled_token(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    test_burnZeroBalance(
+    test_issue_non_burnable_token(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_minting_exceeds_limit(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_non_approved_increaser_cannot_increase(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_non_owner_cannot_whitelist_increasers(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

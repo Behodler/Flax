@@ -4582,13 +4582,19 @@
     },
     {
       "type": "function",
-      "name": "MaxIssuancePerDay",
-      "inputs": [],
+      "name": "allowanceIncreasers",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
       "outputs": [
         {
           "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
+          "type": "bool",
+          "internalType": "bool"
         }
       ],
       "stateMutability": "view"
@@ -4621,27 +4627,16 @@
     },
     {
       "type": "function",
-      "name": "issuancePerTokenPerDay",
+      "name": "increaseAllowance",
       "inputs": [
         {
-          "name": "",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "runningAmount",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "lastIssuedAt",
+          "name": "amount",
           "type": "uint256",
           "internalType": "uint256"
         }
       ],
-      "stateMutability": "view"
+      "outputs": [],
+      "stateMutability": "nonpayable"
     },
     {
       "type": "function",
@@ -4660,6 +4655,19 @@
       ],
       "outputs": [],
       "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "mintAllowance",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
     },
     {
       "type": "function",
@@ -4689,19 +4697,6 @@
           "name": "newCouponAddress",
           "type": "address",
           "internalType": "address"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "setMaxIssuancePerDay",
-      "inputs": [
-        {
-          "name": "_maxIssuancePerDay",
-          "type": "uint256",
-          "internalType": "uint256"
         }
       ],
       "outputs": [],
@@ -4778,6 +4773,24 @@
       "stateMutability": "view"
     },
     {
+      "type": "function",
+      "name": "whitelistAllowanceIncreasers",
+      "inputs": [
+        {
+          "name": "increaser",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_whitelist",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
       "type": "event",
       "name": "CouponsIssued",
       "inputs": [
@@ -4801,12 +4814,6 @@
         },
         {
           "name": "coupons",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "runningAmount",
           "type": "uint256",
           "indexed": false,
           "internalType": "uint256"
@@ -4863,6 +4870,33 @@
         }
       ],
       "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "ExcessiveMinting",
+      "inputs": [
+        {
+          "name": "attemptedAmount",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "remaining",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OnlyWhitelistedIncreasers",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
     },
     {
       "type": "error",
@@ -5076,63 +5110,84 @@
     },
     {
       "type": "function",
-      "name": "testAccessControl",
+      "name": "testFail_burn_non_burnable_token",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "testFail_burnNonBurnableToken",
+      "name": "testFail_burn_non_whitelisted_token",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "testFail_burnNonWhitelistedToken",
+      "name": "test_access_control",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "testIssueBurnableToken",
+      "name": "test_burn_burnable_token",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "testIssueFailOnDisabledToken",
+      "name": "test_burn_zero_balance",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "testIssueNonBurnableToken",
+      "name": "test_increaser_can_increase_approvals",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "testMintingExceedsLimit",
+      "name": "test_issue_burnable_token",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "test_burnBurnableToken",
+      "name": "test_issue_fail_on_disabled_token",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
     {
       "type": "function",
-      "name": "test_burnZeroBalance",
+      "name": "test_issue_non_burnable_token",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "test_minting_exceeds_limit",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "test_non_approved_increaser_cannot_increase",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "test_non_owner_cannot_whitelist_increasers",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"

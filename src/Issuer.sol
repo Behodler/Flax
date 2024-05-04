@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import "./ICoupon.sol"; // Assuming this path is correct as per your project structure
+import "./Errors.sol";
 
 contract Issuer is Ownable {
     struct TokenInfo {
@@ -11,14 +12,10 @@ contract Issuer is Ownable {
         uint teraCouponPerToken;
     }
 
-    struct IssuanceData {
-        uint runningAmount;
-        uint lastIssuedAt;
-    }
-
     mapping(address => TokenInfo) public whitelist;
-    mapping(address => IssuanceData) public issuancePerTokenPerDay;
-    uint public MaxIssuancePerDay;
+    uint public mintAllowance; //works just like spender allowance.
+    mapping(address => bool) public allowanceIncreasers; // whitelisted to increase mintAllowance
+
     ICoupon public couponContract;
 
     // Events
@@ -32,12 +29,28 @@ contract Issuer is Ownable {
         address indexed user,
         address indexed token,
         uint amount,
-        uint coupons,
-        uint runningAmount
+        uint coupons
     );
 
     constructor(address couponAddress) Ownable(msg.sender) {
         couponContract = ICoupon(couponAddress);
+    }
+
+    modifier onlyIncreaser() {
+        if(!allowanceIncreasers[msg.sender]){
+            revert OnlyWhitelistedIncreasers(msg.sender);
+        }
+        _;
+    }
+    function whitelistAllowanceIncreasers(
+        address increaser,
+        bool _whitelist
+    ) public onlyOwner {
+        allowanceIncreasers[increaser] = _whitelist;
+    }
+
+    function increaseAllowance(uint amount) public onlyIncreaser {
+        mintAllowance += amount;
     }
 
     //If we list poolTogether tokens and Issuer wins, we want to burn the EYE prize
@@ -62,10 +75,6 @@ contract Issuer is Ownable {
         emit TokenWhitelisted(token, enabled, burnable, teraCouponPerToken);
     }
 
-    function setMaxIssuancePerDay(uint _maxIssuancePerDay) public onlyOwner {
-        MaxIssuancePerDay = _maxIssuancePerDay;
-    }
-
     function setCouponContract(address newCouponAddress) public onlyOwner {
         couponContract = ICoupon(newCouponAddress);
     }
@@ -80,27 +89,12 @@ contract Issuer is Ownable {
         // Calculate coupons to issue with precision adjustment
         uint coupons = (amount * info.teraCouponPerToken) / 1e12;
 
-        // Check and update issuance limits
-        IssuanceData storage data = issuancePerTokenPerDay[inputToken];
-        uint currentTime = block.timestamp;
-        emit CouponsIssued(
-            msg.sender,
-            inputToken,
-            amount,
-            coupons,
-            data.runningAmount
-        );
-        if (currentTime - data.lastIssuedAt < 24 hours) {
-            require(
-                data.runningAmount + coupons <= MaxIssuancePerDay,
-                "Max issuance limit exceeded for today"
-            );
-            data.runningAmount += coupons;
-        } else {
-            data.lastIssuedAt = currentTime;
-            data.runningAmount = coupons;
-        }
+        emit CouponsIssued(msg.sender, inputToken, amount, coupons);
 
+        if (coupons > mintAllowance) {
+            revert ExcessiveMinting(coupons, mintAllowance);
+        }
+        mintAllowance -= coupons;
         // Transfer tokens to this contract
         IERC20(inputToken).transferFrom(msg.sender, address(this), amount);
 

@@ -22,7 +22,6 @@ contract DeployContracts is Script {
 
         // Deploy Issuer with the address of Coupon
         Issuer issuer = new Issuer(address(coupon));
-        issuer.setMaxIssuancePerDay(100 ether);
         issuer.setTokenInfo(address(mockInputTokenBurnable), true, true, 2e12);
         issuer.setTokenInfo(
             address(mockInputTokenNonBurnable),
