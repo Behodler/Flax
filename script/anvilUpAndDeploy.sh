@@ -35,7 +35,7 @@ fi
 LOG_FILE="../anvil.log"
 
 # Start anvil in the background and redirect all output to log file
-anvil  --block-time 5 --port 8545 --accounts 10 > "$LOG_FILE" 2>&1 & 
+anvil  --block-time 15 --port 8545 --accounts 10 > "$LOG_FILE" 2>&1 & 
 
 # # Get the PID of the anvil process
 ANVIL_PID=$!

@@ -4,8 +4,8 @@ pragma solidity ^0.8.20;
 import "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import "./ICoupon.sol"; // Assuming this path is correct as per your project structure
 import "./Errors.sol";
-
-contract Issuer is Ownable {
+import "lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
+contract Issuer is Ownable, ReentrancyGuard {
     struct TokenInfo {
         bool enabled;
         bool burnable;
@@ -37,7 +37,7 @@ contract Issuer is Ownable {
     }
 
     modifier onlyIncreaser() {
-        if(!allowanceIncreasers[msg.sender]){
+        if (!allowanceIncreasers[msg.sender]) {
             revert OnlyWhitelistedIncreasers(msg.sender);
         }
         _;
@@ -79,13 +79,15 @@ contract Issuer is Ownable {
         couponContract = ICoupon(newCouponAddress);
     }
 
-    function issue(address inputToken, uint amount) public {
+    function issue(address inputToken, uint amount) public nonReentrant {
         require(
             whitelist[inputToken].enabled,
             "Token not enabled for issuance"
         );
         TokenInfo memory info = whitelist[inputToken];
-
+        uint before = IERC20(inputToken).balanceOf(address(this));
+        IERC20(inputToken).transferFrom(msg.sender, address(this), amount);
+        amount = IERC20(inputToken).balanceOf(address(this)) - before;
         // Calculate coupons to issue with precision adjustment
         uint coupons = (amount * info.teraCouponPerToken) / 1e12;
 
@@ -96,7 +98,6 @@ contract Issuer is Ownable {
         }
         mintAllowance -= coupons;
         // Transfer tokens to this contract
-        IERC20(inputToken).transferFrom(msg.sender, address(this), amount);
 
         // Burn if applicable
         if (info.burnable) {

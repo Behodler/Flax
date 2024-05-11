@@ -199,7 +199,7 @@ contract IssuerTest is Test {
         issuer.increaseAllowance(2e18 - 1);
         vm.stopPrank();
 
-        oneToOnetoken.mint(owner, 1e18);
+        oneToOnetoken.mint(owner, 2e18);
         vm.prank(owner);
         oneToOnetoken.approve(address(issuer), 2e18);
         issuer.issue(address(oneToOnetoken), 1e18); // First issuance, within limit

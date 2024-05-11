@@ -13,16 +13,39 @@ contract DeployContracts is Script {
         vm.startBroadcast();
 
         // Deploy Coupon
-        Coupon coupon = new Coupon("Coupon", "CSCX");
+        Coupon coupon = new Coupon("Flax", "FLX");
+        coupon.setMinter(msg.sender, true);
+        coupon.mint(1e20 * 35, msg.sender);
         Coupon mockInputTokenBurnable = new Coupon("EYE", "EYE");
         Coupon mockInputTokenNonBurnable = new Coupon(
             "Uni V2 EYE/SCX",
             "EYE/SCX"
         );
+        mockInputTokenNonBurnable.setMinter(msg.sender, true);
+        mockInputTokenNonBurnable.mint((6 ether) / 10000, msg.sender);
+        mockInputTokenBurnable.setMinter(msg.sender, true);
+        Coupon SCX = new Coupon("Scarcity", "SCX");
+        SCX.setMinter(msg.sender, true);
+        Coupon PyroSCX_EYE = new Coupon(
+            "Pryo(SCX/EYE Uni V2 LP)",
+            "PyroSCXEYE"
+        );
 
+        PyroSCX_EYE.setMinter(msg.sender, true);
+
+        mockInputTokenBurnable.mint(13 ether, msg.sender);
+        SCX.mint((101107 ether) / 1000, msg.sender);
+
+        PyroSCX_EYE.mint(uint((323220 ether) / uint(2200)), msg.sender);
         // Deploy Issuer with the address of Coupon
         Issuer issuer = new Issuer(address(coupon));
+
+        PyroSCX_EYE.approve(address(issuer), uint(type(int256).max) + 1);
+
         issuer.setTokenInfo(address(mockInputTokenBurnable), true, true, 2e12);
+        issuer.setTokenInfo(address(SCX), true, true, 3e12);
+        issuer.setTokenInfo(address(PyroSCX_EYE), true, true, 4e10);
+
         issuer.setTokenInfo(
             address(mockInputTokenNonBurnable),
             true,
@@ -40,6 +63,10 @@ contract DeployContracts is Script {
                 addressToString.toAsciiString(
                     address(mockInputTokenNonBurnable)
                 ),
+                '", "',
+                addressToString.toAsciiString(address(SCX)),
+                '", "',
+                addressToString.toAsciiString(address(PyroSCX_EYE)),
                 '"]'
             )
         );
@@ -51,8 +78,10 @@ contract DeployContracts is Script {
                 addressToString.toAsciiString(address(coupon)),
                 '", "Issuer":"',
                 addressToString.toAsciiString(address(issuer)),
-                   '", "Multicall":"',
+                '", "Multicall":"',
                 addressToString.toAsciiString(multicall2Address),
+                '", "msgsender":"',
+                addressToString.toAsciiString(msg.sender),
                 '", "Inputs":',
                 inputs,
                 "}"
