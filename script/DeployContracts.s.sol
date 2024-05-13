@@ -39,12 +39,15 @@ contract DeployContracts is Script {
         PyroSCX_EYE.mint(uint((323220 ether) / uint(2200)), msg.sender);
         // Deploy Issuer with the address of Coupon
         Issuer issuer = new Issuer(address(coupon));
-
-        PyroSCX_EYE.approve(address(issuer), uint(type(int256).max) + 1);
+        coupon.setMinter(address(issuer), true);
+        PyroSCX_EYE.approve(address(issuer), uint(type(uint).max));
 
         issuer.setTokenInfo(address(mockInputTokenBurnable), true, true, 2e12);
         issuer.setTokenInfo(address(SCX), true, true, 3e12);
         issuer.setTokenInfo(address(PyroSCX_EYE), true, true, 4e10);
+
+        issuer.whitelistAllowanceIncreasers(msg.sender, true);
+        issuer.increaseAllowance(100 ether);
 
         issuer.setTokenInfo(
             address(mockInputTokenNonBurnable),
