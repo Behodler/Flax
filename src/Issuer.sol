@@ -108,6 +108,5 @@ contract Issuer is Ownable, ReentrancyGuard {
 
         // Mint coupons
         couponContract.mint(coupons, msg.sender);
-        // emit CouponsIssued(msg.sender, inputToken, amount, coupons);
     }
 }
