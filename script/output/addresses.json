@@ -1,1 +1,5 @@
-{"logs":["{\"Coupon\":\"0x8464135c8f25da09e49bc8782676a84730c318bc\", \"Issuer\":\"0x381445710b5e73d34af196c53a3d5cda58edbf7a\", \"Multicall\":\"0xb0b8c7ccc64be9aa9b5712bbec5a5bd0a3213059\", \"msgsender\":\"0x70997970c51812dc3a010c7d01b50e0d17dc79c8\", \"Inputs\":[\"0x712516e61c8b383df4a63cfe83d7701bce54b03e\", \"0xbcf26943c0197d2ee0e5d05c716be60cc2761508\", \"0x05aa229aec102f78ce0e852a812a388f076aa555\", \"0x0f5d1ef48f12b6f691401bfe88c2037c690a6afe\"]}"],"gas_used":6392015,"returns":{}}
+{
+  "logs": [
+    "{\"Coupon\":\"0x8464135c8f25da09e49bc8782676a84730c318bc\", \"Issuer\":\"0x381445710b5e73d34af196c53a3d5cda58edbf7a\", \"Multicall\":\"0xb0b8c7ccc64be9aa9b5712bbec5a5bd0a3213059\", \"msgsender\":\"0x70997970c51812dc3a010c7d01b50e0d17dc79c8\", \"Inputs\":[\"0x712516e61c8b383df4a63cfe83d7701bce54b03e\", \"0xbcf26943c0197d2ee0e5d05c716be60cc2761508\", \"0x05aa229aec102f78ce0e852a812a388f076aa555\", \"0x0f5d1ef48f12b6f691401bfe88c2037c690a6afe\"]}"
+  ]
+}
