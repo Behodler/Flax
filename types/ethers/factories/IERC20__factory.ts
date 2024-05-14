@@ -41,7 +41,7 @@ const _abi = [
         internalType: "address",
       },
       {
-        name: "value",
+        name: "amount",
         type: "uint256",
         internalType: "uint256",
       },
@@ -76,6 +76,45 @@ const _abi = [
   },
   {
     type: "function",
+    name: "decimals",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "name",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "symbol",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "totalSupply",
     inputs: [],
     outputs: [
@@ -97,7 +136,7 @@ const _abi = [
         internalType: "address",
       },
       {
-        name: "value",
+        name: "amount",
         type: "uint256",
         internalType: "uint256",
       },
@@ -126,7 +165,7 @@ const _abi = [
         internalType: "address",
       },
       {
-        name: "value",
+        name: "amount",
         type: "uint256",
         internalType: "uint256",
       },

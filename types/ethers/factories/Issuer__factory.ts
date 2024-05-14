@@ -358,6 +358,11 @@ const _abi = [
       },
     ],
   },
+  {
+    type: "error",
+    name: "ReentrancyGuardReentrantCall",
+    inputs: [],
+  },
 ] as const;
 
 export class Issuer__factory {

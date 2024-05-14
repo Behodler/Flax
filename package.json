@@ -12,8 +12,13 @@
     "extract-abis": "node extractAbis.js",
     "anvil-up": "./script/anvilUpAndDeploy.sh ",
     "anvil-down": "./script/anvilDown.sh",
+    "flatten:Coupon": "forge flatten src/Coupon.sol | sed '1,3d' > flat/Coupon_flat.sol",
+    "flatten:Issuer": "forge flatten src/Issuer.sol | sed '1,3d' > flat/Issuer_flat.sol",
+    "flatten": "yarn flatten:Coupon && yarn flatten:Issuer",
     "generate-types": "typechain --target ethers-v5 --out-dir types/ethers './abis/*.json'",
-    "build": "forge build && yarn run extract-abis && yarn compile-abi-file &&yarn run generate-types"
+    "move-artifacts": "cp ABIs.json ../coupon-ui/src/constants/ && cp -R types ../coupon-ui/src/typechain",
+    "build-independent": "rm flat/* && forge build && yarn run extract-abis && yarn compile-abi-file && yarn run generate-types && yarn flatten && yarn move-artifacts",
+    "build": "yarn build-independent && yarn move-artifacts"
   },
   "repository": {
     "type": "git",

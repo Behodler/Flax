@@ -2563,7 +2563,7 @@
           "internalType": "address"
         },
         {
-          "name": "value",
+          "name": "amount",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -2598,6 +2598,45 @@
     },
     {
       "type": "function",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8",
+          "internalType": "uint8"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "name",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "symbol",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "totalSupply",
       "inputs": [],
       "outputs": [
@@ -2619,7 +2658,7 @@
           "internalType": "address"
         },
         {
-          "name": "value",
+          "name": "amount",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -2648,7 +2687,7 @@
           "internalType": "address"
         },
         {
-          "name": "value",
+          "name": "amount",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -4919,6 +4958,11 @@
           "internalType": "address"
         }
       ]
+    },
+    {
+      "type": "error",
+      "name": "ReentrancyGuardReentrantCall",
+      "inputs": []
     }
   ],
   "IssuerTest": [
@@ -6667,6 +6711,13 @@
           "internalType": "address"
         }
       ]
+    }
+  ],
+  "ReentrancyGuard": [
+    {
+      "type": "error",
+      "name": "ReentrancyGuardReentrantCall",
+      "inputs": []
     }
   ],
   "Script": [

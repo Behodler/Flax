@@ -29,6 +29,7 @@ export { MockERC20__factory } from "./MockERC20__factory";
 export { MockERC721__factory } from "./MockERC721__factory";
 export { MockToken__factory } from "./MockToken__factory";
 export { Ownable__factory } from "./Ownable__factory";
+export { ReentrancyGuard__factory } from "./ReentrancyGuard__factory";
 export { Script__factory } from "./Script__factory";
 export { StdAssertions__factory } from "./StdAssertions__factory";
 export { StdInvariant__factory } from "./StdInvariant__factory";
