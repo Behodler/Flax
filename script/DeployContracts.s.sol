@@ -2,8 +2,9 @@
 pragma solidity ^0.8.20;
 
 import "forge-std/Script.sol";
-import "../src/Coupon.sol";
 import "../src/Issuer.sol";
+import "../src/Coupon.sol";
+
 import {Vm} from "forge-std/Vm.sol";
 
 contract DeployContracts is Script {
