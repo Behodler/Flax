@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@oz_flax/contracts/access/Ownable.sol";
 import "./ICoupon.sol";
 import "./Errors.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@oz_flax/contracts/utils/ReentrancyGuard.sol";
 import "./IIssuer.sol";
 
 contract Issuer is IIssuer, Ownable, ReentrancyGuard {

@@ -1,2 +1,1 @@
-@openzeppelin/contracts=lib/openzeppelin-contracts/contracts
-
+@oz_flax/contracts=lib/openzeppelin-contracts/contracts
