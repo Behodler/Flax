@@ -1,31 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-interface IIssuer {
+abstract contract IIssuer {
     struct TokenInfo {
         bool enabled;
         bool burnable;
-        uint teraCouponPerToken;
+        uint lastminted_timestamp;
     }
 
-    function allowanceIncreasers(address) external returns (bool);
-    function mintAllowance() external returns (uint);
-    function whitelistAllowanceIncreasers(
-        address increaser,
-        bool _whitelist
-    ) external;
+    function mintAllowance() external virtual returns (uint);
 
-    function increaseAllowance(uint amount) external;
-    function burnBurnable(address tokenAddress) external;
+    function currentPrice(address token) public view virtual returns (uint);
+
+    function setLimits(uint allowance, uint rate) external virtual;
+
     function setTokenInfo(
         address token,
         bool enabled,
-        bool burnable,
-        uint teraCouponPerToken
-    ) external;
+        bool burnable
+    ) external virtual;
 
-    function setCouponContract(address newCouponAddress) external;
-    function issue(address inputToken, uint amount) external;
+    function setCouponContract(address newCouponAddress) external virtual;
+
+    function issue(address inputToken, uint amount) external virtual;
 
     // Events
     event TokenWhitelisted(

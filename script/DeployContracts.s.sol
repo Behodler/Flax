@@ -42,20 +42,18 @@ contract DeployContracts is Script {
         Issuer issuer = new Issuer(address(coupon));
         coupon.setMinter(address(issuer), true);
         PyroSCX_EYE.approve(address(issuer), uint(type(uint).max));
+        issuer.setLimits(1000 ether, 10_000_000_000);
+        issuer.setTokenInfo(address(mockInputTokenBurnable), true, true);
+        issuer.setTokenInfo(address(SCX), true, true);
+        issuer.setTokenInfo(address(PyroSCX_EYE), true, true);
 
-        issuer.setTokenInfo(address(mockInputTokenBurnable), true, true, 2e12);
-        issuer.setTokenInfo(address(SCX), true, true, 3e12);
-        issuer.setTokenInfo(address(PyroSCX_EYE), true, true, 4e10);
-
-        issuer.whitelistAllowanceIncreasers(msg.sender, true);
-        issuer.increaseAllowance(100 ether);
 
         issuer.setTokenInfo(
             address(mockInputTokenNonBurnable),
             true,
-            false,
-            304e10
+            false
         );
+
         vm.stopBroadcast();
         address multicall2Address = multi.run();
         // Creating a JSON array of input token addresses
