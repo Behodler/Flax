@@ -2689,6 +2689,32 @@ const _abi = [
   },
   {
     type: "function",
+    name: "blobBaseFee",
+    inputs: [
+      {
+        name: "newBlobBaseFee",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "blobhashes",
+    inputs: [
+      {
+        name: "hashes",
+        type: "bytes32[]",
+        internalType: "bytes32[]",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "breakpoint",
     inputs: [
       {
@@ -3366,6 +3392,25 @@ const _abi = [
   },
   {
     type: "function",
+    name: "ensNamehash",
+    inputs: [
+      {
+        name: "name",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+    ],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
     name: "envAddress",
     inputs: [
       {
@@ -3532,6 +3577,25 @@ const _abi = [
         name: "value",
         type: "bytes32",
         internalType: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "envExists",
+    inputs: [
+      {
+        name: "name",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "result",
+        type: "bool",
+        internalType: "bool",
       },
     ],
     stateMutability: "view",
@@ -4608,6 +4672,32 @@ const _abi = [
   },
   {
     type: "function",
+    name: "getBlobBaseFee",
+    inputs: [],
+    outputs: [
+      {
+        name: "blobBaseFee",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getBlobhashes",
+    inputs: [],
+    outputs: [
+      {
+        name: "hashes",
+        type: "bytes32[]",
+        internalType: "bytes32[]",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getBlockNumber",
     inputs: [],
     outputs: [
@@ -4868,6 +4958,49 @@ const _abi = [
   },
   {
     type: "function",
+    name: "indexOf",
+    inputs: [
+      {
+        name: "input",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "key",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    name: "isContext",
+    inputs: [
+      {
+        name: "context",
+        type: "uint8",
+        internalType: "enum VmSafe.ForgeContext",
+      },
+    ],
+    outputs: [
+      {
+        name: "result",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "isDir",
     inputs: [
       {
@@ -5012,6 +5145,46 @@ const _abi = [
     ],
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "lastCallGas",
+    inputs: [],
+    outputs: [
+      {
+        name: "gas",
+        type: "tuple",
+        internalType: "struct VmSafe.Gas",
+        components: [
+          {
+            name: "gasLimit",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "gasTotalUsed",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "gasMemoryUsed",
+            type: "uint64",
+            internalType: "uint64",
+          },
+          {
+            name: "gasRefunded",
+            type: "int64",
+            internalType: "int64",
+          },
+          {
+            name: "gasRemaining",
+            type: "uint64",
+            internalType: "uint64",
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -6192,6 +6365,19 @@ const _abi = [
   },
   {
     type: "function",
+    name: "prevrandao",
+    inputs: [
+      {
+        name: "newPrevrandao",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "projectRoot",
     inputs: [],
     outputs: [
@@ -6202,6 +6388,151 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "prompt",
+    inputs: [
+      {
+        name: "promptText",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "input",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "promptAddress",
+    inputs: [
+      {
+        name: "promptText",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "promptSecret",
+    inputs: [
+      {
+        name: "promptText",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "input",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "promptSecretUint",
+    inputs: [
+      {
+        name: "promptText",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "promptUint",
+    inputs: [
+      {
+        name: "promptText",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "randomAddress",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "randomUint",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "randomUint",
+    inputs: [
+      {
+        name: "min",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "max",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -7233,6 +7564,35 @@ const _abi = [
   },
   {
     type: "function",
+    name: "serializeUintToHex",
+    inputs: [
+      {
+        name: "objectKey",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "valueKey",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "value",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "json",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "setEnv",
     inputs: [
       {
@@ -7284,6 +7644,69 @@ const _abi = [
     ],
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "sign",
+    inputs: [
+      {
+        name: "digest",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+    ],
+    outputs: [
+      {
+        name: "v",
+        type: "uint8",
+        internalType: "uint8",
+      },
+      {
+        name: "r",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+      {
+        name: "s",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+    ],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    name: "sign",
+    inputs: [
+      {
+        name: "signer",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "digest",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+    ],
+    outputs: [
+      {
+        name: "v",
+        type: "uint8",
+        internalType: "uint8",
+      },
+      {
+        name: "r",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+      {
+        name: "s",
+        type: "bytes32",
+        internalType: "bytes32",
+      },
+    ],
+    stateMutability: "pure",
   },
   {
     type: "function",

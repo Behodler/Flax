@@ -111,6 +111,28 @@ export declare namespace VmSafe {
     emitter: string;
   };
 
+  export type GasStruct = {
+    gasLimit: BigNumberish;
+    gasTotalUsed: BigNumberish;
+    gasMemoryUsed: BigNumberish;
+    gasRefunded: BigNumberish;
+    gasRemaining: BigNumberish;
+  };
+
+  export type GasStructOutput = [
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ] & {
+    gasLimit: BigNumber;
+    gasTotalUsed: BigNumber;
+    gasMemoryUsed: BigNumber;
+    gasRefunded: BigNumber;
+    gasRemaining: BigNumber;
+  };
+
   export type DirEntryStruct = {
     errorMessage: string;
     path: string;
@@ -367,6 +389,7 @@ export interface VmSafeInterface extends utils.Interface {
     "deriveKey(string,uint32,string)": FunctionFragment;
     "deriveKey(string,uint32)": FunctionFragment;
     "deriveKey(string,string,uint32)": FunctionFragment;
+    "ensNamehash(string)": FunctionFragment;
     "envAddress(string)": FunctionFragment;
     "envAddress(string,string)": FunctionFragment;
     "envBool(string)": FunctionFragment;
@@ -375,6 +398,7 @@ export interface VmSafeInterface extends utils.Interface {
     "envBytes(string,string)": FunctionFragment;
     "envBytes32(string,string)": FunctionFragment;
     "envBytes32(string)": FunctionFragment;
+    "envExists(string)": FunctionFragment;
     "envInt(string,string)": FunctionFragment;
     "envInt(string)": FunctionFragment;
     "envOr(string,string,bytes32[])": FunctionFragment;
@@ -399,6 +423,7 @@ export interface VmSafeInterface extends utils.Interface {
     "exists(string)": FunctionFragment;
     "ffi(string[])": FunctionFragment;
     "fsMetadata(string)": FunctionFragment;
+    "getBlobBaseFee()": FunctionFragment;
     "getBlockNumber()": FunctionFragment;
     "getBlockTimestamp()": FunctionFragment;
     "getCode(string)": FunctionFragment;
@@ -410,12 +435,15 @@ export interface VmSafeInterface extends utils.Interface {
     "getNonce(address)": FunctionFragment;
     "getNonce((address,uint256,uint256,uint256))": FunctionFragment;
     "getRecordedLogs()": FunctionFragment;
+    "indexOf(string,string)": FunctionFragment;
+    "isContext(uint8)": FunctionFragment;
     "isDir(string)": FunctionFragment;
     "isFile(string)": FunctionFragment;
     "keyExists(string,string)": FunctionFragment;
     "keyExistsJson(string,string)": FunctionFragment;
     "keyExistsToml(string,string)": FunctionFragment;
     "label(address,string)": FunctionFragment;
+    "lastCallGas()": FunctionFragment;
     "load(address,bytes32)": FunctionFragment;
     "parseAddress(string)": FunctionFragment;
     "parseBool(string)": FunctionFragment;
@@ -459,6 +487,14 @@ export interface VmSafeInterface extends utils.Interface {
     "parseUint(string)": FunctionFragment;
     "pauseGasMetering()": FunctionFragment;
     "projectRoot()": FunctionFragment;
+    "prompt(string)": FunctionFragment;
+    "promptAddress(string)": FunctionFragment;
+    "promptSecret(string)": FunctionFragment;
+    "promptSecretUint(string)": FunctionFragment;
+    "promptUint(string)": FunctionFragment;
+    "randomAddress()": FunctionFragment;
+    "randomUint()": FunctionFragment;
+    "randomUint(uint256,uint256)": FunctionFragment;
     "readDir(string,uint64)": FunctionFragment;
     "readDir(string,uint64,bool)": FunctionFragment;
     "readDir(string)": FunctionFragment;
@@ -492,7 +528,10 @@ export interface VmSafeInterface extends utils.Interface {
     "serializeString(string,string,string)": FunctionFragment;
     "serializeUint(string,string,uint256)": FunctionFragment;
     "serializeUint(string,string,uint256[])": FunctionFragment;
+    "serializeUintToHex(string,string,uint256)": FunctionFragment;
     "setEnv(string,string)": FunctionFragment;
+    "sign(bytes32)": FunctionFragment;
+    "sign(address,bytes32)": FunctionFragment;
     "sign((address,uint256,uint256,uint256),bytes32)": FunctionFragment;
     "sign(uint256,bytes32)": FunctionFragment;
     "signP256(uint256,bytes32)": FunctionFragment;
@@ -669,6 +708,7 @@ export interface VmSafeInterface extends utils.Interface {
       | "deriveKey(string,uint32,string)"
       | "deriveKey(string,uint32)"
       | "deriveKey(string,string,uint32)"
+      | "ensNamehash"
       | "envAddress(string)"
       | "envAddress(string,string)"
       | "envBool(string)"
@@ -677,6 +717,7 @@ export interface VmSafeInterface extends utils.Interface {
       | "envBytes(string,string)"
       | "envBytes32(string,string)"
       | "envBytes32(string)"
+      | "envExists"
       | "envInt(string,string)"
       | "envInt(string)"
       | "envOr(string,string,bytes32[])"
@@ -701,6 +742,7 @@ export interface VmSafeInterface extends utils.Interface {
       | "exists"
       | "ffi"
       | "fsMetadata"
+      | "getBlobBaseFee"
       | "getBlockNumber"
       | "getBlockTimestamp"
       | "getCode"
@@ -712,12 +754,15 @@ export interface VmSafeInterface extends utils.Interface {
       | "getNonce(address)"
       | "getNonce((address,uint256,uint256,uint256))"
       | "getRecordedLogs"
+      | "indexOf"
+      | "isContext"
       | "isDir"
       | "isFile"
       | "keyExists"
       | "keyExistsJson"
       | "keyExistsToml"
       | "label"
+      | "lastCallGas"
       | "load"
       | "parseAddress"
       | "parseBool"
@@ -761,6 +806,14 @@ export interface VmSafeInterface extends utils.Interface {
       | "parseUint"
       | "pauseGasMetering"
       | "projectRoot"
+      | "prompt"
+      | "promptAddress"
+      | "promptSecret"
+      | "promptSecretUint"
+      | "promptUint"
+      | "randomAddress"
+      | "randomUint()"
+      | "randomUint(uint256,uint256)"
       | "readDir(string,uint64)"
       | "readDir(string,uint64,bool)"
       | "readDir(string)"
@@ -794,7 +847,10 @@ export interface VmSafeInterface extends utils.Interface {
       | "serializeString(string,string,string)"
       | "serializeUint(string,string,uint256)"
       | "serializeUint(string,string,uint256[])"
+      | "serializeUintToHex"
       | "setEnv"
+      | "sign(bytes32)"
+      | "sign(address,bytes32)"
       | "sign((address,uint256,uint256,uint256),bytes32)"
       | "sign(uint256,bytes32)"
       | "signP256"
@@ -1368,6 +1424,7 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "deriveKey(string,string,uint32)",
     values: [string, string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "ensNamehash", values: [string]): string;
   encodeFunctionData(
     functionFragment: "envAddress(string)",
     values: [string]
@@ -1400,6 +1457,7 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "envBytes32(string)",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "envExists", values: [string]): string;
   encodeFunctionData(
     functionFragment: "envInt(string,string)",
     values: [string, string]
@@ -1488,6 +1546,10 @@ export interface VmSafeInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "ffi", values: [string[]]): string;
   encodeFunctionData(functionFragment: "fsMetadata", values: [string]): string;
   encodeFunctionData(
+    functionFragment: "getBlobBaseFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getBlockNumber",
     values?: undefined
   ): string;
@@ -1525,6 +1587,14 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "getRecordedLogs",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "indexOf",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isContext",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "isDir", values: [string]): string;
   encodeFunctionData(functionFragment: "isFile", values: [string]): string;
   encodeFunctionData(
@@ -1542,6 +1612,10 @@ export interface VmSafeInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "label",
     values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastCallGas",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "load",
@@ -1703,6 +1777,32 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "projectRoot",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "prompt", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "promptAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "promptSecret",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "promptSecretUint",
+    values: [string]
+  ): string;
+  encodeFunctionData(functionFragment: "promptUint", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "randomAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "randomUint()",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "randomUint(uint256,uint256)",
+    values: [BigNumberish, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "readDir(string,uint64)",
     values: [string, BigNumberish]
@@ -1812,8 +1912,20 @@ export interface VmSafeInterface extends utils.Interface {
     values: [string, string, BigNumberish[]]
   ): string;
   encodeFunctionData(
+    functionFragment: "serializeUintToHex",
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setEnv",
     values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "sign(bytes32)",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "sign(address,bytes32)",
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "sign((address,uint256,uint256,uint256),bytes32)",
@@ -2469,6 +2581,10 @@ export interface VmSafeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "ensNamehash",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "envAddress(string)",
     data: BytesLike
   ): Result;
@@ -2500,6 +2616,7 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "envBytes32(string)",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "envExists", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "envInt(string,string)",
     data: BytesLike
@@ -2588,6 +2705,10 @@ export interface VmSafeInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "ffi", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "fsMetadata", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "getBlobBaseFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getBlockNumber",
     data: BytesLike
   ): Result;
@@ -2625,6 +2746,8 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "getRecordedLogs",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "indexOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isContext", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isDir", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isFile", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "keyExists", data: BytesLike): Result;
@@ -2637,6 +2760,10 @@ export interface VmSafeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "label", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lastCallGas",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "load", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "parseAddress",
@@ -2794,6 +2921,32 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "projectRoot",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "prompt", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "promptAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "promptSecret",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "promptSecretUint",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "promptUint", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "randomAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "randomUint()",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "randomUint(uint256,uint256)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "readDir(string,uint64)",
     data: BytesLike
@@ -2893,7 +3046,19 @@ export interface VmSafeInterface extends utils.Interface {
     functionFragment: "serializeUint(string,string,uint256[])",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "serializeUintToHex",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setEnv", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "sign(bytes32)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "sign(address,bytes32)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "sign((address,uint256,uint256,uint256),bytes32)",
     data: BytesLike
@@ -3956,6 +4121,8 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { privateKey: BigNumber }>;
 
+    ensNamehash(name: string, overrides?: CallOverrides): Promise<[string]>;
+
     "envAddress(string)"(
       name: string,
       overrides?: CallOverrides
@@ -3999,6 +4166,11 @@ export interface VmSafe extends BaseContract {
       name: string,
       overrides?: CallOverrides
     ): Promise<[string] & { value: string }>;
+
+    envExists(
+      name: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean] & { result: boolean }>;
 
     "envInt(string,string)"(
       name: string,
@@ -4151,6 +4323,10 @@ export interface VmSafe extends BaseContract {
       }
     >;
 
+    getBlobBaseFee(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { blobBaseFee: BigNumber }>;
+
     getBlockNumber(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { height: BigNumber }>;
@@ -4207,6 +4383,17 @@ export interface VmSafe extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    indexOf(
+      input: string,
+      key: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    isContext(
+      context: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean] & { result: boolean }>;
+
     isDir(
       path: string,
       overrides?: Overrides & { from?: string }
@@ -4240,6 +4427,10 @@ export interface VmSafe extends BaseContract {
       newLabel: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    lastCallGas(
+      overrides?: CallOverrides
+    ): Promise<[VmSafe.GasStructOutput] & { gas: VmSafe.GasStructOutput }>;
 
     load(
       target: string,
@@ -4487,6 +4678,45 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string] & { path: string }>;
 
+    prompt(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    promptAddress(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    promptSecret(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    promptSecretUint(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    promptUint(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    randomAddress(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    "randomUint()"(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    "randomUint(uint256,uint256)"(
+      min: BigNumberish,
+      max: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     "readDir(string,uint64)"(
       path: string,
       maxDepth: BigNumberish,
@@ -4695,11 +4925,29 @@ export interface VmSafe extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    serializeUintToHex(
+      objectKey: string,
+      valueKey: string,
+      value: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     setEnv(
       name: string,
       value: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    "sign(bytes32)"(
+      digest: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[number, string, string] & { v: number; r: string; s: string }>;
+
+    "sign(address,bytes32)"(
+      signer: string,
+      digest: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[number, string, string] & { v: number; r: string; s: string }>;
 
     "sign((address,uint256,uint256,uint256),bytes32)"(
       wallet: VmSafe.WalletStruct,
@@ -5795,6 +6043,8 @@ export interface VmSafe extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  ensNamehash(name: string, overrides?: CallOverrides): Promise<string>;
+
   "envAddress(string)"(
     name: string,
     overrides?: CallOverrides
@@ -5832,6 +6082,8 @@ export interface VmSafe extends BaseContract {
     name: string,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  envExists(name: string, overrides?: CallOverrides): Promise<boolean>;
 
   "envInt(string,string)"(
     name: string,
@@ -5974,6 +6226,8 @@ export interface VmSafe extends BaseContract {
     overrides?: CallOverrides
   ): Promise<VmSafe.FsMetadataStructOutput>;
 
+  getBlobBaseFee(overrides?: CallOverrides): Promise<BigNumber>;
+
   getBlockNumber(overrides?: CallOverrides): Promise<BigNumber>;
 
   getBlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
@@ -6020,6 +6274,14 @@ export interface VmSafe extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  indexOf(
+    input: string,
+    key: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  isContext(context: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
+
   isDir(
     path: string,
     overrides?: Overrides & { from?: string }
@@ -6053,6 +6315,8 @@ export interface VmSafe extends BaseContract {
     newLabel: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  lastCallGas(overrides?: CallOverrides): Promise<VmSafe.GasStructOutput>;
 
   load(
     target: string,
@@ -6292,6 +6556,45 @@ export interface VmSafe extends BaseContract {
 
   projectRoot(overrides?: CallOverrides): Promise<string>;
 
+  prompt(
+    promptText: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  promptAddress(
+    promptText: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  promptSecret(
+    promptText: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  promptSecretUint(
+    promptText: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  promptUint(
+    promptText: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  randomAddress(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  "randomUint()"(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  "randomUint(uint256,uint256)"(
+    min: BigNumberish,
+    max: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   "readDir(string,uint64)"(
     path: string,
     maxDepth: BigNumberish,
@@ -6469,11 +6772,29 @@ export interface VmSafe extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  serializeUintToHex(
+    objectKey: string,
+    valueKey: string,
+    value: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   setEnv(
     name: string,
     value: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
+
+  "sign(bytes32)"(
+    digest: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<[number, string, string] & { v: number; r: string; s: string }>;
+
+  "sign(address,bytes32)"(
+    signer: string,
+    digest: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<[number, string, string] & { v: number; r: string; s: string }>;
 
   "sign((address,uint256,uint256,uint256),bytes32)"(
     wallet: VmSafe.WalletStruct,
@@ -7551,6 +7872,8 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    ensNamehash(name: string, overrides?: CallOverrides): Promise<string>;
+
     "envAddress(string)"(
       name: string,
       overrides?: CallOverrides
@@ -7594,6 +7917,8 @@ export interface VmSafe extends BaseContract {
       name: string,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    envExists(name: string, overrides?: CallOverrides): Promise<boolean>;
 
     "envInt(string,string)"(
       name: string,
@@ -7736,6 +8061,8 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<VmSafe.FsMetadataStructOutput>;
 
+    getBlobBaseFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     getBlockNumber(overrides?: CallOverrides): Promise<BigNumber>;
 
     getBlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
@@ -7788,6 +8115,17 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<VmSafe.LogStructOutput[]>;
 
+    indexOf(
+      input: string,
+      key: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isContext(
+      context: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     isDir(path: string, overrides?: CallOverrides): Promise<boolean>;
 
     isFile(path: string, overrides?: CallOverrides): Promise<boolean>;
@@ -7815,6 +8153,8 @@ export interface VmSafe extends BaseContract {
       newLabel: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    lastCallGas(overrides?: CallOverrides): Promise<VmSafe.GasStructOutput>;
 
     load(
       target: string,
@@ -8058,6 +8398,38 @@ export interface VmSafe extends BaseContract {
 
     projectRoot(overrides?: CallOverrides): Promise<string>;
 
+    prompt(promptText: string, overrides?: CallOverrides): Promise<string>;
+
+    promptAddress(
+      promptText: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    promptSecret(
+      promptText: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    promptSecretUint(
+      promptText: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    promptUint(
+      promptText: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    randomAddress(overrides?: CallOverrides): Promise<string>;
+
+    "randomUint()"(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "randomUint(uint256,uint256)"(
+      min: BigNumberish,
+      max: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     "readDir(string,uint64)"(
       path: string,
       maxDepth: BigNumberish,
@@ -8226,11 +8598,29 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    serializeUintToHex(
+      objectKey: string,
+      valueKey: string,
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     setEnv(
       name: string,
       value: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    "sign(bytes32)"(
+      digest: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[number, string, string] & { v: number; r: string; s: string }>;
+
+    "sign(address,bytes32)"(
+      signer: string,
+      digest: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[number, string, string] & { v: number; r: string; s: string }>;
 
     "sign((address,uint256,uint256,uint256),bytes32)"(
       wallet: VmSafe.WalletStruct,
@@ -9308,6 +9698,8 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    ensNamehash(name: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     "envAddress(string)"(
       name: string,
       overrides?: CallOverrides
@@ -9351,6 +9743,8 @@ export interface VmSafe extends BaseContract {
       name: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    envExists(name: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "envInt(string,string)"(
       name: string,
@@ -9496,6 +9890,8 @@ export interface VmSafe extends BaseContract {
 
     fsMetadata(path: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getBlobBaseFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     getBlockNumber(overrides?: CallOverrides): Promise<BigNumber>;
 
     getBlockTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
@@ -9545,6 +9941,17 @@ export interface VmSafe extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    indexOf(
+      input: string,
+      key: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isContext(
+      context: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isDir(
       path: string,
       overrides?: Overrides & { from?: string }
@@ -9578,6 +9985,8 @@ export interface VmSafe extends BaseContract {
       newLabel: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    lastCallGas(overrides?: CallOverrides): Promise<BigNumber>;
 
     load(
       target: string,
@@ -9823,6 +10232,45 @@ export interface VmSafe extends BaseContract {
 
     projectRoot(overrides?: CallOverrides): Promise<BigNumber>;
 
+    prompt(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    promptAddress(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    promptSecret(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    promptSecretUint(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    promptUint(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    randomAddress(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    "randomUint()"(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    "randomUint(uint256,uint256)"(
+      min: BigNumberish,
+      max: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     "readDir(string,uint64)"(
       path: string,
       maxDepth: BigNumberish,
@@ -9996,10 +10444,28 @@ export interface VmSafe extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    serializeUintToHex(
+      objectKey: string,
+      valueKey: string,
+      value: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     setEnv(
       name: string,
       value: string,
       overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    "sign(bytes32)"(
+      digest: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "sign(address,bytes32)"(
+      signer: string,
+      digest: BytesLike,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "sign((address,uint256,uint256,uint256),bytes32)"(
@@ -11092,6 +11558,11 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    ensNamehash(
+      name: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     "envAddress(string)"(
       name: string,
       overrides?: CallOverrides
@@ -11132,6 +11603,11 @@ export interface VmSafe extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     "envBytes32(string)"(
+      name: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    envExists(
       name: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -11283,6 +11759,8 @@ export interface VmSafe extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getBlobBaseFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getBlockNumber(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getBlockTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -11335,6 +11813,17 @@ export interface VmSafe extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    indexOf(
+      input: string,
+      key: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isContext(
+      context: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     isDir(
       path: string,
       overrides?: Overrides & { from?: string }
@@ -11368,6 +11857,8 @@ export interface VmSafe extends BaseContract {
       newLabel: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    lastCallGas(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     load(
       target: string,
@@ -11613,6 +12104,45 @@ export interface VmSafe extends BaseContract {
 
     projectRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    prompt(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    promptAddress(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    promptSecret(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    promptSecretUint(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    promptUint(
+      promptText: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    randomAddress(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    "randomUint()"(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    "randomUint(uint256,uint256)"(
+      min: BigNumberish,
+      max: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     "readDir(string,uint64)"(
       path: string,
       maxDepth: BigNumberish,
@@ -11805,10 +12335,28 @@ export interface VmSafe extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    serializeUintToHex(
+      objectKey: string,
+      valueKey: string,
+      value: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     setEnv(
       name: string,
       value: string,
       overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    "sign(bytes32)"(
+      digest: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "sign(address,bytes32)"(
+      signer: string,
+      digest: BytesLike,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "sign((address,uint256,uint256,uint256),bytes32)"(

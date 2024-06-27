@@ -4,33 +4,9 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type { Issuer, IssuerInterface } from "../Issuer";
+import type { IIssuer, IIssuerInterface } from "../IIssuer";
 
 const _abi = [
-  {
-    type: "constructor",
-    inputs: [
-      {
-        name: "couponAddress",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "couponContract",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "contract ICoupon",
-      },
-    ],
-    stateMutability: "view",
-  },
   {
     type: "function",
     name: "currentPrice",
@@ -43,7 +19,7 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "teraCouponPerToken",
+        name: "",
         type: "uint256",
         internalType: "uint256",
       },
@@ -79,26 +55,6 @@ const _abi = [
         internalType: "uint256",
       },
     ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "owner",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "renounceOwnership",
-    inputs: [],
-    outputs: [],
     stateMutability: "nonpayable",
   },
   {
@@ -156,61 +112,6 @@ const _abi = [
     stateMutability: "nonpayable",
   },
   {
-    type: "function",
-    name: "teraCouponPerTokenPerSecond",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "transferOwnership",
-    inputs: [
-      {
-        name: "newOwner",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "whitelist",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [
-      {
-        name: "enabled",
-        type: "bool",
-        internalType: "bool",
-      },
-      {
-        name: "burnable",
-        type: "bool",
-        internalType: "bool",
-      },
-      {
-        name: "lastminted_timestamp",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
     type: "event",
     name: "CouponsIssued",
     inputs: [
@@ -237,25 +138,6 @@ const _abi = [
         type: "uint256",
         indexed: false,
         internalType: "uint256",
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "OwnershipTransferred",
-    inputs: [
-      {
-        name: "previousOwner",
-        type: "address",
-        indexed: true,
-        internalType: "address",
-      },
-      {
-        name: "newOwner",
-        type: "address",
-        indexed: true,
-        internalType: "address",
       },
     ],
     anonymous: false,
@@ -291,57 +173,17 @@ const _abi = [
     ],
     anonymous: false,
   },
-  {
-    type: "error",
-    name: "ExcessiveMinting",
-    inputs: [
-      {
-        name: "attemptedAmount",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "remaining",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-  },
-  {
-    type: "error",
-    name: "OwnableInvalidOwner",
-    inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-  },
-  {
-    type: "error",
-    name: "OwnableUnauthorizedAccount",
-    inputs: [
-      {
-        name: "account",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-  },
-  {
-    type: "error",
-    name: "ReentrancyGuardReentrantCall",
-    inputs: [],
-  },
 ] as const;
 
-export class Issuer__factory {
+export class IIssuer__factory {
   static readonly abi = _abi;
-  static createInterface(): IssuerInterface {
-    return new utils.Interface(_abi) as IssuerInterface;
+  static createInterface(): IIssuerInterface {
+    return new utils.Interface(_abi) as IIssuerInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): Issuer {
-    return new Contract(address, _abi, signerOrProvider) as Issuer;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): IIssuer {
+    return new Contract(address, _abi, signerOrProvider) as IIssuer;
   }
 }

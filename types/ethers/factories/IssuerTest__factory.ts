@@ -48,6 +48,31 @@ const _abi = [
   },
   {
     type: "function",
+    name: "excludeSelectors",
+    inputs: [],
+    outputs: [
+      {
+        name: "excludedSelectors_",
+        type: "tuple[]",
+        internalType: "struct StdInvariant.FuzzSelector[]",
+        components: [
+          {
+            name: "addr",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "selectors",
+            type: "bytes4[]",
+            internalType: "bytes4[]",
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "excludeSenders",
     inputs: [],
     outputs: [
@@ -87,12 +112,12 @@ const _abi = [
       {
         name: "targetedArtifactSelectors_",
         type: "tuple[]",
-        internalType: "struct StdInvariant.FuzzSelector[]",
+        internalType: "struct StdInvariant.FuzzArtifactSelector[]",
         components: [
           {
-            name: "addr",
-            type: "address",
-            internalType: "address",
+            name: "artifact",
+            type: "string",
+            internalType: "string",
           },
           {
             name: "selectors",
@@ -195,20 +220,6 @@ const _abi = [
   },
   {
     type: "function",
-    name: "testFail_burn_non_burnable_token",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "testFail_burn_non_whitelisted_token",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
     name: "test_access_control",
     inputs: [],
     outputs: [],
@@ -216,21 +227,14 @@ const _abi = [
   },
   {
     type: "function",
-    name: "test_burn_burnable_token",
+    name: "test_currentPrice_is_accurate",
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
-    name: "test_burn_zero_balance",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "test_increaser_can_increase_approvals",
+    name: "test_excessive_minting",
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",
@@ -252,27 +256,6 @@ const _abi = [
   {
     type: "function",
     name: "test_issue_non_burnable_token",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "test_minting_exceeds_limit",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "test_non_approved_increaser_cannot_increase",
-    inputs: [],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "test_non_owner_cannot_whitelist_increasers",
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",

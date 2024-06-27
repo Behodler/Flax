@@ -26,42 +26,26 @@ import type {
   OnEvent,
 } from "./common";
 
-export interface IssuerInterface extends utils.Interface {
+export interface IIssuerInterface extends utils.Interface {
   functions: {
-    "couponContract()": FunctionFragment;
     "currentPrice(address)": FunctionFragment;
     "issue(address,uint256)": FunctionFragment;
     "mintAllowance()": FunctionFragment;
-    "owner()": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
     "setLimits(uint256,uint256)": FunctionFragment;
     "setTokenInfo(address,bool,bool)": FunctionFragment;
-    "teraCouponPerTokenPerSecond()": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "whitelist(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "couponContract"
       | "currentPrice"
       | "issue"
       | "mintAllowance"
-      | "owner"
-      | "renounceOwnership"
       | "setCouponContract"
       | "setLimits"
       | "setTokenInfo"
-      | "teraCouponPerTokenPerSecond"
-      | "transferOwnership"
-      | "whitelist"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "couponContract",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "currentPrice",
     values: [string]
@@ -72,11 +56,6 @@ export interface IssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mintAllowance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -91,20 +70,7 @@ export interface IssuerInterface extends utils.Interface {
     functionFragment: "setTokenInfo",
     values: [string, boolean, boolean]
   ): string;
-  encodeFunctionData(
-    functionFragment: "teraCouponPerTokenPerSecond",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "whitelist", values: [string]): string;
 
-  decodeFunctionResult(
-    functionFragment: "couponContract",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "currentPrice",
     data: BytesLike
@@ -112,11 +78,6 @@ export interface IssuerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "issue", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mintAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -128,24 +89,13 @@ export interface IssuerInterface extends utils.Interface {
     functionFragment: "setTokenInfo",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "teraCouponPerTokenPerSecond",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "whitelist", data: BytesLike): Result;
 
   events: {
     "CouponsIssued(address,address,uint256,uint256)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
     "TokenWhitelisted(address,bool,bool,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CouponsIssued"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokenWhitelisted"): EventFragment;
 }
 
@@ -162,18 +112,6 @@ export type CouponsIssuedEvent = TypedEvent<
 
 export type CouponsIssuedEventFilter = TypedEventFilter<CouponsIssuedEvent>;
 
-export interface OwnershipTransferredEventObject {
-  previousOwner: string;
-  newOwner: string;
-}
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string],
-  OwnershipTransferredEventObject
->;
-
-export type OwnershipTransferredEventFilter =
-  TypedEventFilter<OwnershipTransferredEvent>;
-
 export interface TokenWhitelistedEventObject {
   token: string;
   enabled: boolean;
@@ -188,12 +126,12 @@ export type TokenWhitelistedEvent = TypedEvent<
 export type TokenWhitelistedEventFilter =
   TypedEventFilter<TokenWhitelistedEvent>;
 
-export interface Issuer extends BaseContract {
+export interface IIssuer extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IssuerInterface;
+  interface: IIssuerInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -215,12 +153,10 @@ export interface Issuer extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    couponContract(overrides?: CallOverrides): Promise<[string]>;
-
     currentPrice(
       token: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { teraCouponPerToken: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     issue(
       inputToken: string,
@@ -228,11 +164,7 @@ export interface Issuer extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    mintAllowance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
-    renounceOwnership(
+    mintAllowance(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -253,29 +185,7 @@ export interface Issuer extends BaseContract {
       burnable: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
-
-    teraCouponPerTokenPerSecond(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    whitelist(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, boolean, BigNumber] & {
-        enabled: boolean;
-        burnable: boolean;
-        lastminted_timestamp: BigNumber;
-      }
-    >;
   };
-
-  couponContract(overrides?: CallOverrides): Promise<string>;
 
   currentPrice(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -285,11 +195,7 @@ export interface Issuer extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
-
-  renounceOwnership(
+  mintAllowance(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -311,27 +217,7 @@ export interface Issuer extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  teraCouponPerTokenPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
-
-  transferOwnership(
-    newOwner: string,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  whitelist(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [boolean, boolean, BigNumber] & {
-      enabled: boolean;
-      burnable: boolean;
-      lastminted_timestamp: BigNumber;
-    }
-  >;
-
   callStatic: {
-    couponContract(overrides?: CallOverrides): Promise<string>;
-
     currentPrice(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     issue(
@@ -341,10 +227,6 @@ export interface Issuer extends BaseContract {
     ): Promise<void>;
 
     mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<string>;
-
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     setCouponContract(
       newCouponAddress: string,
@@ -363,24 +245,6 @@ export interface Issuer extends BaseContract {
       burnable: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    teraCouponPerTokenPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    whitelist(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, boolean, BigNumber] & {
-        enabled: boolean;
-        burnable: boolean;
-        lastminted_timestamp: BigNumber;
-      }
-    >;
   };
 
   filters: {
@@ -397,15 +261,6 @@ export interface Issuer extends BaseContract {
       coupons?: null
     ): CouponsIssuedEventFilter;
 
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): OwnershipTransferredEventFilter;
-    OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null
-    ): OwnershipTransferredEventFilter;
-
     "TokenWhitelisted(address,bool,bool,uint256)"(
       token?: null,
       enabled?: null,
@@ -421,8 +276,6 @@ export interface Issuer extends BaseContract {
   };
 
   estimateGas: {
-    couponContract(overrides?: CallOverrides): Promise<BigNumber>;
-
     currentPrice(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     issue(
@@ -431,11 +284,7 @@ export interface Issuer extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    renounceOwnership(
+    mintAllowance(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -456,20 +305,9 @@ export interface Issuer extends BaseContract {
       burnable: boolean,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
-
-    teraCouponPerTokenPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
-    whitelist(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    couponContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     currentPrice(
       token: string,
       overrides?: CallOverrides
@@ -481,11 +319,7 @@ export interface Issuer extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    mintAllowance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    renounceOwnership(
+    mintAllowance(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -505,20 +339,6 @@ export interface Issuer extends BaseContract {
       enabled: boolean,
       burnable: boolean,
       overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    teraCouponPerTokenPerSecond(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    whitelist(
-      arg0: string,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -34,12 +34,10 @@ export interface ICouponInterface extends utils.Interface {
     "burn(uint256)": FunctionFragment;
     "mint(uint256,address)": FunctionFragment;
     "minters(address)": FunctionFragment;
-    "owner()": FunctionFragment;
     "setMinter(address,bool)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
   };
 
   getFunction(
@@ -50,12 +48,10 @@ export interface ICouponInterface extends utils.Interface {
       | "burn"
       | "mint"
       | "minters"
-      | "owner"
       | "setMinter"
       | "totalSupply"
       | "transfer"
       | "transferFrom"
-      | "transferOwnership"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -73,7 +69,6 @@ export interface ICouponInterface extends utils.Interface {
     values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "minters", values: [string]): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setMinter",
     values: [string, boolean]
@@ -90,10 +85,6 @@ export interface ICouponInterface extends utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [string]
-  ): string;
 
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -101,7 +92,6 @@ export interface ICouponInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "minters", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setMinter", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -110,10 +100,6 @@ export interface ICouponInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 
@@ -204,8 +190,6 @@ export interface ICoupon extends BaseContract {
 
     minters(minter: string, overrides?: CallOverrides): Promise<[boolean]>;
 
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
     setMinter(
       minter: string,
       canMint: boolean,
@@ -224,11 +208,6 @@ export interface ICoupon extends BaseContract {
       from: string,
       to: string,
       value: BigNumberish,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    transferOwnership(
-      newOwner: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
@@ -260,8 +239,6 @@ export interface ICoupon extends BaseContract {
 
   minters(minter: string, overrides?: CallOverrides): Promise<boolean>;
 
-  owner(overrides?: CallOverrides): Promise<string>;
-
   setMinter(
     minter: string,
     canMint: boolean,
@@ -280,11 +257,6 @@ export interface ICoupon extends BaseContract {
     from: string,
     to: string,
     value: BigNumberish,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  transferOwnership(
-    newOwner: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -313,8 +285,6 @@ export interface ICoupon extends BaseContract {
 
     minters(minter: string, overrides?: CallOverrides): Promise<boolean>;
 
-    owner(overrides?: CallOverrides): Promise<string>;
-
     setMinter(
       minter: string,
       canMint: boolean,
@@ -335,11 +305,6 @@ export interface ICoupon extends BaseContract {
       value: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {
@@ -394,8 +359,6 @@ export interface ICoupon extends BaseContract {
 
     minters(minter: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
     setMinter(
       minter: string,
       canMint: boolean,
@@ -414,11 +377,6 @@ export interface ICoupon extends BaseContract {
       from: string,
       to: string,
       value: BigNumberish,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
@@ -457,8 +415,6 @@ export interface ICoupon extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     setMinter(
       minter: string,
       canMint: boolean,
@@ -477,11 +433,6 @@ export interface ICoupon extends BaseContract {
       from: string,
       to: string,
       value: BigNumberish,
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

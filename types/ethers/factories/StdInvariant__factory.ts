@@ -35,6 +35,31 @@ const _abi = [
   },
   {
     type: "function",
+    name: "excludeSelectors",
+    inputs: [],
+    outputs: [
+      {
+        name: "excludedSelectors_",
+        type: "tuple[]",
+        internalType: "struct StdInvariant.FuzzSelector[]",
+        components: [
+          {
+            name: "addr",
+            type: "address",
+            internalType: "address",
+          },
+          {
+            name: "selectors",
+            type: "bytes4[]",
+            internalType: "bytes4[]",
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "excludeSenders",
     inputs: [],
     outputs: [
@@ -54,12 +79,12 @@ const _abi = [
       {
         name: "targetedArtifactSelectors_",
         type: "tuple[]",
-        internalType: "struct StdInvariant.FuzzSelector[]",
+        internalType: "struct StdInvariant.FuzzArtifactSelector[]",
         components: [
           {
-            name: "addr",
-            type: "address",
-            internalType: "address",
+            name: "artifact",
+            type: "string",
+            internalType: "string",
           },
           {
             name: "selectors",

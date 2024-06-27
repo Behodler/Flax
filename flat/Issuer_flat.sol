@@ -6,7 +6,7 @@ pragma solidity ^0.8.20;
 // OpenZeppelin Contracts (last updated v5.0.0) (token/ERC20/IERC20.sol)
 
 /**
- * @dev Interface of the ERC20 standard as defined in the EIP.
+ * @dev Interface of the ERC-20 standard as defined in the ERC.
  */
 interface IERC20 {
     /**
@@ -124,6 +124,9 @@ abstract contract Context {
  * those functions `private`, and then adding `external` `nonReentrant` entry
  * points to them.
  *
+ * TIP: If EIP-1153 (transient storage) is available on the chain you're deploying at,
+ * consider using {ReentrancyGuardTransient} instead.
+ *
  * TIP: If you would like to learn more about reentrancy and alternative ways
  * to protect against it, check out our blog post
  * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
@@ -196,7 +199,46 @@ abstract contract ReentrancyGuard {
 
 error UnauthorizedMinter(address minter, bool hasMintingRight);
 error ExcessiveMinting (uint attemptedAmount, uint remaining);
-error OnlyWhitelistedIncreasers (address user);
+
+// src/IIssuer.sol
+
+abstract contract IIssuer {
+    struct TokenInfo {
+        bool enabled;
+        bool burnable;
+        uint lastminted_timestamp;
+    }
+
+    function mintAllowance() external virtual returns (uint);
+
+    function currentPrice(address token) public view virtual returns (uint);
+
+    function setLimits(uint allowance, uint rate) external virtual;
+
+    function setTokenInfo(
+        address token,
+        bool enabled,
+        bool burnable
+    ) external virtual;
+
+    function setCouponContract(address newCouponAddress) external virtual;
+
+    function issue(address inputToken, uint amount) external virtual;
+
+    // Events
+    event TokenWhitelisted(
+        address token,
+        bool enabled,
+        bool burnable,
+        uint teraCouponPerToken
+    );
+    event CouponsIssued(
+        address indexed user,
+        address indexed token,
+        uint amount,
+        uint coupons
+    );
+}
 
 // lib/openzeppelin-contracts/contracts/access/Ownable.sol
 
@@ -299,9 +341,6 @@ abstract contract Ownable is Context {
 // src/ICoupon.sol
 
 interface ICoupon is IERC20 {
-    // Ownable functions
-    function owner() external view returns (address);
-    function transferOwnership(address newOwner) external;
 
     // Coupon specific functions
     function setMinter(address minter, bool canMint) external;
@@ -314,83 +353,51 @@ interface ICoupon is IERC20 {
 
 // src/Issuer.sol
 
- // Assuming this path is correct as per your project structure
-
-contract Issuer is Ownable, ReentrancyGuard {
-    struct TokenInfo {
-        bool enabled;
-        bool burnable;
-        uint teraCouponPerToken;
-    }
-
+contract Issuer is IIssuer, Ownable, ReentrancyGuard {
     mapping(address => TokenInfo) public whitelist;
-    uint public mintAllowance; //works just like spender allowance.
-    mapping(address => bool) public allowanceIncreasers; // whitelisted to increase mintAllowance
-
+    uint public override mintAllowance; //max mint allowance per tx
     ICoupon public couponContract;
-
-    // Events
-    event TokenWhitelisted(
-        address token,
-        bool enabled,
-        bool burnable,
-        uint teraCouponPerToken
-    );
-    event CouponsIssued(
-        address indexed user,
-        address indexed token,
-        uint amount,
-        uint coupons
-    );
+    uint public teraCouponPerTokenPerSecond; // growth rate of Flax price in terms of token.
 
     constructor(address couponAddress) Ownable(msg.sender) {
         couponContract = ICoupon(couponAddress);
     }
 
-    modifier onlyIncreaser() {
-        if (!allowanceIncreasers[msg.sender]) {
-            revert OnlyWhitelistedIncreasers(msg.sender);
-        }
-        _;
-    }
-    function whitelistAllowanceIncreasers(
-        address increaser,
-        bool _whitelist
-    ) public onlyOwner {
-        allowanceIncreasers[increaser] = _whitelist;
-    }
-
-    function increaseAllowance(uint amount) public onlyIncreaser {
-        mintAllowance += amount;
-    }
-
-    //If we list poolTogether tokens and Issuer wins, we want to burn the EYE prize
-    function burnBurnable(address tokenAddress) public {
-        require(
-            whitelist[tokenAddress].enabled && whitelist[tokenAddress].burnable,
-            "Only burnable tokens"
-        );
-        uint balance = ICoupon(tokenAddress).balanceOf(address(this));
-        try ICoupon(tokenAddress).burn(balance) {} catch {
-            revert("Failed to burn the input token");
-        }
+    function setLimits(uint allowance, uint rate) external override onlyOwner {
+        mintAllowance = allowance;
+        teraCouponPerTokenPerSecond = rate;
     }
 
     function setTokenInfo(
         address token,
         bool enabled,
-        bool burnable,
-        uint teraCouponPerToken
-    ) public onlyOwner {
-        whitelist[token] = TokenInfo(enabled, burnable, teraCouponPerToken);
-        emit TokenWhitelisted(token, enabled, burnable, teraCouponPerToken);
+        bool burnable
+    ) external override onlyOwner {
+        whitelist[token] = TokenInfo(enabled, burnable, block.timestamp);
+        emit TokenWhitelisted(token, enabled, burnable, block.timestamp);
     }
 
-    function setCouponContract(address newCouponAddress) public onlyOwner {
+    function setCouponContract(
+        address newCouponAddress
+    ) external override onlyOwner {
         couponContract = ICoupon(newCouponAddress);
     }
 
-    function issue(address inputToken, uint amount) public nonReentrant {
+    function currentPrice(
+        address token
+    ) public view override returns (uint teraCouponPerToken) {
+        TokenInfo memory tokenInfo = whitelist[token];
+        if (tokenInfo.enabled) {
+            teraCouponPerToken =
+                (block.timestamp - tokenInfo.lastminted_timestamp) *
+                teraCouponPerTokenPerSecond;
+        }
+    }
+
+    function issue(
+        address inputToken,
+        uint amount
+    ) external override nonReentrant {
         require(
             whitelist[inputToken].enabled,
             "Token not enabled for issuance"
@@ -399,16 +406,15 @@ contract Issuer is Ownable, ReentrancyGuard {
         uint before = IERC20(inputToken).balanceOf(address(this));
         IERC20(inputToken).transferFrom(msg.sender, address(this), amount);
         amount = IERC20(inputToken).balanceOf(address(this)) - before;
+
         // Calculate coupons to issue with precision adjustment
-        uint coupons = (amount * info.teraCouponPerToken) / 1e12;
+        uint coupons = (amount * currentPrice(inputToken)) / 1e12;
 
         emit CouponsIssued(msg.sender, inputToken, amount, coupons);
 
         if (coupons > mintAllowance) {
             revert ExcessiveMinting(coupons, mintAllowance);
         }
-        mintAllowance -= coupons;
-        // Transfer tokens to this contract
 
         // Burn if applicable
         if (info.burnable) {
@@ -419,6 +425,9 @@ contract Issuer is Ownable, ReentrancyGuard {
 
         // Mint coupons
         couponContract.mint(coupons, msg.sender);
+
+        //nonReentrant modifier makes the position of this line safe
+        whitelist[inputToken].lastminted_timestamp = block.timestamp;
     }
 }
 

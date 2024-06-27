@@ -31,6 +31,16 @@ export declare namespace StdInvariant {
     selectors: string[];
   };
 
+  export type FuzzArtifactSelectorStruct = {
+    artifact: string;
+    selectors: BytesLike[];
+  };
+
+  export type FuzzArtifactSelectorStructOutput = [string, string[]] & {
+    artifact: string;
+    selectors: string[];
+  };
+
   export type FuzzInterfaceStruct = { addr: string; artifacts: string[] };
 
   export type FuzzInterfaceStructOutput = [string, string[]] & {
@@ -44,6 +54,7 @@ export interface TestInterface extends utils.Interface {
     "IS_TEST()": FunctionFragment;
     "excludeArtifacts()": FunctionFragment;
     "excludeContracts()": FunctionFragment;
+    "excludeSelectors()": FunctionFragment;
     "excludeSenders()": FunctionFragment;
     "failed()": FunctionFragment;
     "targetArtifactSelectors()": FunctionFragment;
@@ -59,6 +70,7 @@ export interface TestInterface extends utils.Interface {
       | "IS_TEST"
       | "excludeArtifacts"
       | "excludeContracts"
+      | "excludeSelectors"
       | "excludeSenders"
       | "failed"
       | "targetArtifactSelectors"
@@ -76,6 +88,10 @@ export interface TestInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "excludeContracts",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "excludeSelectors",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -115,6 +131,10 @@ export interface TestInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "excludeContracts",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "excludeSelectors",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -459,6 +479,14 @@ export interface Test extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string[]] & { excludedContracts_: string[] }>;
 
+    excludeSelectors(
+      overrides?: CallOverrides
+    ): Promise<
+      [StdInvariant.FuzzSelectorStructOutput[]] & {
+        excludedSelectors_: StdInvariant.FuzzSelectorStructOutput[];
+      }
+    >;
+
     excludeSenders(
       overrides?: CallOverrides
     ): Promise<[string[]] & { excludedSenders_: string[] }>;
@@ -468,8 +496,8 @@ export interface Test extends BaseContract {
     targetArtifactSelectors(
       overrides?: CallOverrides
     ): Promise<
-      [StdInvariant.FuzzSelectorStructOutput[]] & {
-        targetedArtifactSelectors_: StdInvariant.FuzzSelectorStructOutput[];
+      [StdInvariant.FuzzArtifactSelectorStructOutput[]] & {
+        targetedArtifactSelectors_: StdInvariant.FuzzArtifactSelectorStructOutput[];
       }
     >;
 
@@ -508,13 +536,17 @@ export interface Test extends BaseContract {
 
   excludeContracts(overrides?: CallOverrides): Promise<string[]>;
 
+  excludeSelectors(
+    overrides?: CallOverrides
+  ): Promise<StdInvariant.FuzzSelectorStructOutput[]>;
+
   excludeSenders(overrides?: CallOverrides): Promise<string[]>;
 
   failed(overrides?: CallOverrides): Promise<boolean>;
 
   targetArtifactSelectors(
     overrides?: CallOverrides
-  ): Promise<StdInvariant.FuzzSelectorStructOutput[]>;
+  ): Promise<StdInvariant.FuzzArtifactSelectorStructOutput[]>;
 
   targetArtifacts(overrides?: CallOverrides): Promise<string[]>;
 
@@ -537,13 +569,17 @@ export interface Test extends BaseContract {
 
     excludeContracts(overrides?: CallOverrides): Promise<string[]>;
 
+    excludeSelectors(
+      overrides?: CallOverrides
+    ): Promise<StdInvariant.FuzzSelectorStructOutput[]>;
+
     excludeSenders(overrides?: CallOverrides): Promise<string[]>;
 
     failed(overrides?: CallOverrides): Promise<boolean>;
 
     targetArtifactSelectors(
       overrides?: CallOverrides
-    ): Promise<StdInvariant.FuzzSelectorStructOutput[]>;
+    ): Promise<StdInvariant.FuzzArtifactSelectorStructOutput[]>;
 
     targetArtifacts(overrides?: CallOverrides): Promise<string[]>;
 
@@ -668,6 +704,8 @@ export interface Test extends BaseContract {
 
     excludeContracts(overrides?: CallOverrides): Promise<BigNumber>;
 
+    excludeSelectors(overrides?: CallOverrides): Promise<BigNumber>;
+
     excludeSenders(overrides?: CallOverrides): Promise<BigNumber>;
 
     failed(overrides?: CallOverrides): Promise<BigNumber>;
@@ -691,6 +729,8 @@ export interface Test extends BaseContract {
     excludeArtifacts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     excludeContracts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    excludeSelectors(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     excludeSenders(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
