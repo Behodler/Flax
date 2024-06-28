@@ -36,6 +36,7 @@ export { StdAssertions__factory } from "./StdAssertions__factory";
 export { StdInvariant__factory } from "./StdInvariant__factory";
 export { Strings__factory } from "./Strings__factory";
 export { Test__factory } from "./Test__factory";
+export { TestnetFaucet__factory } from "./TestnetFaucet__factory";
 export { Vm__factory } from "./Vm__factory";
 export { VmSafe__factory } from "./VmSafe__factory";
 export { StdError__factory } from "./StdError__factory";
