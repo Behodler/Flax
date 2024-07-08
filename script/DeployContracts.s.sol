@@ -82,9 +82,9 @@ contract DeployContracts is Script {
                 '", "Issuer":"',
                 addressToString.toAsciiString(address(issuer)),
                 '", "Multicall":"',
-                addressToString.toAsciiString(address(hedgeyAdapter)),
-                '", "HedgeyAdapter":"',
                 addressToString.toAsciiString(multicall2Address),
+                '", "HedgeyAdapter":"',
+                addressToString.toAsciiString(address(hedgeyAdapter)),
                 '", "msgsender":"',
                 addressToString.toAsciiString(msg.sender),
                 '", "Inputs":',
@@ -92,7 +92,7 @@ contract DeployContracts is Script {
                 "}"
             )
         );
-        // vm.writeFile("/home/justin/code/BehodlerReborn/coupon/script/output/deployed_addresses.json", jsonOutput);
+
         console.log(jsonOutput);
     }
 
