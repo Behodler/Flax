@@ -4,8 +4,11 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
+  ContractTransaction,
+  Overrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -19,32 +22,29 @@ import type {
   OnEvent,
 } from "./common";
 
-export interface IERC165Interface extends utils.Interface {
+export interface IStreamAdapterInterface extends utils.Interface {
   functions: {
-    "supportsInterface(bytes4)": FunctionFragment;
+    "lock(address,uint256,uint256)": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "supportsInterface"): FunctionFragment;
+  getFunction(nameOrSignatureOrTopic: "lock"): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "supportsInterface",
-    values: [BytesLike]
+    functionFragment: "lock",
+    values: [string, BigNumberish, BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "supportsInterface",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
 
   events: {};
 }
 
-export interface IERC165 extends BaseContract {
+export interface IStreamAdapter extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IERC165Interface;
+  interface: IStreamAdapterInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -66,37 +66,47 @@ export interface IERC165 extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    supportsInterface(
-      interfaceId: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    lock(
+      recipient: string,
+      amount: BigNumberish,
+      durationInDays: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
   };
 
-  supportsInterface(
-    interfaceId: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  lock(
+    recipient: string,
+    amount: BigNumberish,
+    durationInDays: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    supportsInterface(
-      interfaceId: BytesLike,
+    lock(
+      recipient: string,
+      amount: BigNumberish,
+      durationInDays: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<BigNumber>;
   };
 
   filters: {};
 
   estimateGas: {
-    supportsInterface(
-      interfaceId: BytesLike,
-      overrides?: CallOverrides
+    lock(
+      recipient: string,
+      amount: BigNumberish,
+      durationInDays: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    supportsInterface(
-      interfaceId: BytesLike,
-      overrides?: CallOverrides
+    lock(
+      recipient: string,
+      amount: BigNumberish,
+      durationInDays: BigNumberish,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -26,19 +26,31 @@ import type {
   OnEvent,
 } from "./common";
 
-export interface IERC721EnumerableInterface extends utils.Interface {
+export interface ERC721DelegateInterface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
+    "approveDelegator(address,uint256)": FunctionFragment;
+    "approveSpenderDelegator(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "balanceOfDelegate(address)": FunctionFragment;
+    "delegatedTo(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getApprovedDelegator(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "isApprovedForAllDelegation(address,address)": FunctionFragment;
+    "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "setApprovalForAllDelegation(address,bool)": FunctionFragment;
+    "setApprovalForOperator(address,bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
+    "tokenOfDelegateByIndex(address,uint256)": FunctionFragment;
     "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
   };
@@ -46,16 +58,28 @@ export interface IERC721EnumerableInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "approve"
+      | "approveDelegator"
+      | "approveSpenderDelegator"
       | "balanceOf"
+      | "balanceOfDelegate"
+      | "delegatedTo"
       | "getApproved"
+      | "getApprovedDelegator"
       | "isApprovedForAll"
+      | "isApprovedForAllDelegation"
+      | "name"
       | "ownerOf"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setApprovalForAllDelegation"
+      | "setApprovalForOperator"
       | "supportsInterface"
+      | "symbol"
       | "tokenByIndex"
+      | "tokenOfDelegateByIndex"
       | "tokenOfOwnerByIndex"
+      | "tokenURI"
       | "totalSupply"
       | "transferFrom"
   ): FunctionFragment;
@@ -64,15 +88,40 @@ export interface IERC721EnumerableInterface extends utils.Interface {
     functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "approveDelegator",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approveSpenderDelegator",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
+    functionFragment: "balanceOfDelegate",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "delegatedTo",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getApprovedDelegator",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "isApprovedForAllDelegation",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
@@ -90,16 +139,33 @@ export interface IERC721EnumerableInterface extends utils.Interface {
     values: [string, boolean]
   ): string;
   encodeFunctionData(
+    functionFragment: "setApprovalForAllDelegation",
+    values: [string, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setApprovalForOperator",
+    values: [string, boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "tokenByIndex",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "tokenOfDelegateByIndex",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "tokenOfOwnerByIndex",
     values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenURI",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
@@ -111,15 +177,40 @@ export interface IERC721EnumerableInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "approveDelegator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "approveSpenderDelegator",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "balanceOfDelegate",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "delegatedTo",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getApproved",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getApprovedDelegator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "isApprovedForAllDelegation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -134,17 +225,31 @@ export interface IERC721EnumerableInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "supportsInterface",
+    functionFragment: "setApprovalForAllDelegation",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setApprovalForOperator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "tokenByIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenOfDelegateByIndex",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "tokenOfOwnerByIndex",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -157,11 +262,19 @@ export interface IERC721EnumerableInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "ApprovalForAllDelegation(address,address,bool)": EventFragment;
+    "DelegateRemoved(uint256,address)": EventFragment;
+    "DelegatorApproved(uint256,address,address)": EventFragment;
+    "TokenDelegated(uint256,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ApprovalForAllDelegation"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegateRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DelegatorApproved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokenDelegated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -189,6 +302,54 @@ export type ApprovalForAllEvent = TypedEvent<
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
+export interface ApprovalForAllDelegationEventObject {
+  owner: string;
+  operator: string;
+  approved: boolean;
+}
+export type ApprovalForAllDelegationEvent = TypedEvent<
+  [string, string, boolean],
+  ApprovalForAllDelegationEventObject
+>;
+
+export type ApprovalForAllDelegationEventFilter =
+  TypedEventFilter<ApprovalForAllDelegationEvent>;
+
+export interface DelegateRemovedEventObject {
+  tokenId: BigNumber;
+  delegate: string;
+}
+export type DelegateRemovedEvent = TypedEvent<
+  [BigNumber, string],
+  DelegateRemovedEventObject
+>;
+
+export type DelegateRemovedEventFilter = TypedEventFilter<DelegateRemovedEvent>;
+
+export interface DelegatorApprovedEventObject {
+  id: BigNumber;
+  owner: string;
+  delegator: string;
+}
+export type DelegatorApprovedEvent = TypedEvent<
+  [BigNumber, string, string],
+  DelegatorApprovedEventObject
+>;
+
+export type DelegatorApprovedEventFilter =
+  TypedEventFilter<DelegatorApprovedEvent>;
+
+export interface TokenDelegatedEventObject {
+  tokenId: BigNumber;
+  delegate: string;
+}
+export type TokenDelegatedEvent = TypedEvent<
+  [BigNumber, string],
+  TokenDelegatedEventObject
+>;
+
+export type TokenDelegatedEventFilter = TypedEventFilter<TokenDelegatedEvent>;
+
 export interface TransferEventObject {
   from: string;
   to: string;
@@ -201,12 +362,12 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface IERC721Enumerable extends BaseContract {
+export interface ERC721Delegate extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IERC721EnumerableInterface;
+  interface: ERC721DelegateInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -234,15 +395,39 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    balanceOf(
-      owner: string,
+    approveDelegator(
+      delegator: string,
+      planId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    approveSpenderDelegator(
+      spender: string,
+      planId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    balanceOfDelegate(
+      delegate: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { balance: BigNumber }>;
+    ): Promise<[BigNumber]>;
+
+    delegatedTo(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string] & { operator: string }>;
+    ): Promise<[string]>;
+
+    getApprovedDelegator(
+      planId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     isApprovedForAll(
       owner: string,
@@ -250,10 +435,18 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    isApprovedForAllDelegation(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    name(overrides?: CallOverrides): Promise<[string]>;
+
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string] & { owner: string }>;
+    ): Promise<[string]>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: string,
@@ -276,12 +469,32 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    setApprovalForAllDelegation(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setApprovalForOperator(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
     tokenByIndex(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    tokenOfDelegateByIndex(
+      delegate: string,
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -291,6 +504,11 @@ export interface IERC721Enumerable extends BaseContract {
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -308,10 +526,37 @@ export interface IERC721Enumerable extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  approveDelegator(
+    delegator: string,
+    planId: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  approveSpenderDelegator(
+    spender: string,
+    planId: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  balanceOfDelegate(
+    delegate: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  delegatedTo(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   getApproved(
     tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getApprovedDelegator(
+    planId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -320,6 +565,14 @@ export interface IERC721Enumerable extends BaseContract {
     operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  isApprovedForAllDelegation(
+    owner: string,
+    operator: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  name(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -344,12 +597,32 @@ export interface IERC721Enumerable extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  setApprovalForAllDelegation(
+    operator: string,
+    approved: boolean,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setApprovalForOperator(
+    operator: string,
+    approved: boolean,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  symbol(overrides?: CallOverrides): Promise<string>;
+
   tokenByIndex(
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  tokenOfDelegateByIndex(
+    delegate: string,
     index: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
@@ -359,6 +632,8 @@ export interface IERC721Enumerable extends BaseContract {
     index: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -376,10 +651,37 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    approveDelegator(
+      delegator: string,
+      planId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    approveSpenderDelegator(
+      spender: string,
+      planId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    balanceOfDelegate(
+      delegate: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    delegatedTo(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     getApproved(
       tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getApprovedDelegator(
+      planId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -388,6 +690,14 @@ export interface IERC721Enumerable extends BaseContract {
       operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    isApprovedForAllDelegation(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    name(overrides?: CallOverrides): Promise<string>;
 
     ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -412,12 +722,32 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setApprovalForAllDelegation(
+      operator: string,
+      approved: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setApprovalForOperator(
+      operator: string,
+      approved: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    symbol(overrides?: CallOverrides): Promise<string>;
+
     tokenByIndex(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenOfDelegateByIndex(
+      delegate: string,
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -427,6 +757,8 @@ export interface IERC721Enumerable extends BaseContract {
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -461,6 +793,46 @@ export interface IERC721Enumerable extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
+    "ApprovalForAllDelegation(address,address,bool)"(
+      owner?: null,
+      operator?: null,
+      approved?: null
+    ): ApprovalForAllDelegationEventFilter;
+    ApprovalForAllDelegation(
+      owner?: null,
+      operator?: null,
+      approved?: null
+    ): ApprovalForAllDelegationEventFilter;
+
+    "DelegateRemoved(uint256,address)"(
+      tokenId?: BigNumberish | null,
+      delegate?: string | null
+    ): DelegateRemovedEventFilter;
+    DelegateRemoved(
+      tokenId?: BigNumberish | null,
+      delegate?: string | null
+    ): DelegateRemovedEventFilter;
+
+    "DelegatorApproved(uint256,address,address)"(
+      id?: BigNumberish | null,
+      owner?: null,
+      delegator?: null
+    ): DelegatorApprovedEventFilter;
+    DelegatorApproved(
+      id?: BigNumberish | null,
+      owner?: null,
+      delegator?: null
+    ): DelegatorApprovedEventFilter;
+
+    "TokenDelegated(uint256,address)"(
+      tokenId?: BigNumberish | null,
+      delegate?: string | null
+    ): TokenDelegatedEventFilter;
+    TokenDelegated(
+      tokenId?: BigNumberish | null,
+      delegate?: string | null
+    ): TokenDelegatedEventFilter;
+
     "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
@@ -480,10 +852,37 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    approveDelegator(
+      delegator: string,
+      planId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    approveSpenderDelegator(
+      spender: string,
+      planId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    balanceOfDelegate(
+      delegate: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    delegatedTo(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getApproved(
       tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getApprovedDelegator(
+      planId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -492,6 +891,14 @@ export interface IERC721Enumerable extends BaseContract {
       operator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    isApprovedForAllDelegation(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    name(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerOf(
       tokenId: BigNumberish,
@@ -519,12 +926,32 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    setApprovalForAllDelegation(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setApprovalForOperator(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
     tokenByIndex(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenOfDelegateByIndex(
+      delegate: string,
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -532,6 +959,11 @@ export interface IERC721Enumerable extends BaseContract {
     tokenOfOwnerByIndex(
       owner: string,
       index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -552,8 +984,30 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    approveDelegator(
+      delegator: string,
+      planId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    approveSpenderDelegator(
+      spender: string,
+      planId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     balanceOf(
       owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    balanceOfDelegate(
+      delegate: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    delegatedTo(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -562,11 +1016,24 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getApprovedDelegator(
+      planId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    isApprovedForAllDelegation(
+      owner: string,
+      operator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ownerOf(
       tokenId: BigNumberish,
@@ -594,12 +1061,32 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    setApprovalForAllDelegation(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setApprovalForOperator(
+      operator: string,
+      approved: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     tokenByIndex(
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenOfDelegateByIndex(
+      delegate: string,
       index: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -607,6 +1094,11 @@ export interface IERC721Enumerable extends BaseContract {
     tokenOfOwnerByIndex(
       owner: string,
       index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type {
-  IERC721Enumerable,
-  IERC721EnumerableInterface,
-} from "../IERC721Enumerable";
+  ERC721Delegate,
+  ERC721DelegateInterface,
+} from "../ERC721Delegate";
 
 const _abi = [
   {
@@ -30,6 +30,42 @@ const _abi = [
   },
   {
     type: "function",
+    name: "approveDelegator",
+    inputs: [
+      {
+        name: "delegator",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "planId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "approveSpenderDelegator",
+    inputs: [
+      {
+        name: "spender",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "planId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "balanceOf",
     inputs: [
       {
@@ -40,9 +76,47 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "balance",
+        name: "",
         type: "uint256",
         internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "balanceOfDelegate",
+    inputs: [
+      {
+        name: "delegate",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "delegatedTo",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
       },
     ],
     stateMutability: "view",
@@ -59,7 +133,26 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "operator",
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getApprovedDelegator",
+    inputs: [
+      {
+        name: "planId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
         type: "address",
         internalType: "address",
       },
@@ -92,6 +185,43 @@ const _abi = [
   },
   {
     type: "function",
+    name: "isApprovedForAllDelegation",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "operator",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "name",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "ownerOf",
     inputs: [
       {
@@ -102,7 +232,7 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "owner",
+        name: "",
         type: "address",
         internalType: "address",
       },
@@ -180,6 +310,42 @@ const _abi = [
   },
   {
     type: "function",
+    name: "setApprovalForAllDelegation",
+    inputs: [
+      {
+        name: "operator",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "approved",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setApprovalForOperator",
+    inputs: [
+      {
+        name: "operator",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "approved",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "supportsInterface",
     inputs: [
       {
@@ -199,8 +365,45 @@ const _abi = [
   },
   {
     type: "function",
+    name: "symbol",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "tokenByIndex",
     inputs: [
+      {
+        name: "index",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "tokenOfDelegateByIndex",
+    inputs: [
+      {
+        name: "delegate",
+        type: "address",
+        internalType: "address",
+      },
       {
         name: "index",
         type: "uint256",
@@ -236,6 +439,25 @@ const _abi = [
         name: "",
         type: "uint256",
         internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "tokenURI",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
       },
     ],
     stateMutability: "view",
@@ -328,6 +550,94 @@ const _abi = [
   },
   {
     type: "event",
+    name: "ApprovalForAllDelegation",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "operator",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "approved",
+        type: "bool",
+        indexed: false,
+        internalType: "bool",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "DelegateRemoved",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "delegate",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "DelegatorApproved",
+    inputs: [
+      {
+        name: "id",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "owner",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "delegator",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "TokenDelegated",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "delegate",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
     name: "Transfer",
     inputs: [
       {
@@ -353,15 +663,15 @@ const _abi = [
   },
 ] as const;
 
-export class IERC721Enumerable__factory {
+export class ERC721Delegate__factory {
   static readonly abi = _abi;
-  static createInterface(): IERC721EnumerableInterface {
-    return new utils.Interface(_abi) as IERC721EnumerableInterface;
+  static createInterface(): ERC721DelegateInterface {
+    return new utils.Interface(_abi) as ERC721DelegateInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IERC721Enumerable {
-    return new Contract(address, _abi, signerOrProvider) as IERC721Enumerable;
+  ): ERC721Delegate {
+    return new Contract(address, _abi, signerOrProvider) as ERC721Delegate;
   }
 }

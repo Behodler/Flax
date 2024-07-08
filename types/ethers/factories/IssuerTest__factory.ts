@@ -261,6 +261,20 @@ const _abi = [
     stateMutability: "nonpayable",
   },
   {
+    type: "function",
+    name: "test_one_coupon_per_token_per_year_growth",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "test_set_many_tokens_info",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
     type: "event",
     name: "log",
     inputs: [

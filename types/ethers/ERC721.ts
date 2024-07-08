@@ -26,20 +26,20 @@ import type {
   OnEvent,
 } from "./common";
 
-export interface IERC721EnumerableInterface extends utils.Interface {
+export interface ERC721Interface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "tokenByIndex(uint256)": FunctionFragment;
-    "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
-    "totalSupply()": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
   };
 
@@ -49,14 +49,14 @@ export interface IERC721EnumerableInterface extends utils.Interface {
       | "balanceOf"
       | "getApproved"
       | "isApprovedForAll"
+      | "name"
       | "ownerOf"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
       | "supportsInterface"
-      | "tokenByIndex"
-      | "tokenOfOwnerByIndex"
-      | "totalSupply"
+      | "symbol"
+      | "tokenURI"
       | "transferFrom"
   ): FunctionFragment;
 
@@ -73,6 +73,7 @@ export interface IERC721EnumerableInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
@@ -93,17 +94,10 @@ export interface IERC721EnumerableInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "tokenByIndex",
+    functionFragment: "tokenURI",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenOfOwnerByIndex",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "transferFrom",
@@ -120,6 +114,7 @@ export interface IERC721EnumerableInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -137,18 +132,8 @@ export interface IERC721EnumerableInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenByIndex",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenOfOwnerByIndex",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
     data: BytesLike
@@ -201,12 +186,12 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface IERC721Enumerable extends BaseContract {
+export interface ERC721 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IERC721EnumerableInterface;
+  interface: ERC721Interface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -234,15 +219,12 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    balanceOf(
-      owner: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { balance: BigNumber }>;
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string] & { operator: string }>;
+    ): Promise<[string]>;
 
     isApprovedForAll(
       owner: string,
@@ -250,10 +232,12 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    name(overrides?: CallOverrides): Promise<[string]>;
+
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string] & { owner: string }>;
+    ): Promise<[string]>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: string,
@@ -281,18 +265,12 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    tokenByIndex(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    tokenOfOwnerByIndex(
-      owner: string,
-      index: BigNumberish,
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+    ): Promise<[string]>;
 
     transferFrom(
       from: string,
@@ -320,6 +298,8 @@ export interface IERC721Enumerable extends BaseContract {
     operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  name(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -349,18 +329,9 @@ export interface IERC721Enumerable extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  tokenByIndex(
-    index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  symbol(overrides?: CallOverrides): Promise<string>;
 
-  tokenOfOwnerByIndex(
-    owner: string,
-    index: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   transferFrom(
     from: string,
@@ -388,6 +359,8 @@ export interface IERC721Enumerable extends BaseContract {
       operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    name(overrides?: CallOverrides): Promise<string>;
 
     ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -417,18 +390,9 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    tokenByIndex(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    symbol(overrides?: CallOverrides): Promise<string>;
 
-    tokenOfOwnerByIndex(
-      owner: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     transferFrom(
       from: string,
@@ -493,6 +457,8 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -524,18 +490,12 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    tokenByIndex(
-      index: BigNumberish,
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    tokenOfOwnerByIndex(
-      owner: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferFrom(
       from: string,
@@ -568,6 +528,8 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -599,18 +561,12 @@ export interface IERC721Enumerable extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    tokenByIndex(
-      index: BigNumberish,
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    tokenOfOwnerByIndex(
-      owner: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferFrom(
       from: string,

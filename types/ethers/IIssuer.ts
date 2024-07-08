@@ -32,8 +32,9 @@ export interface IIssuerInterface extends utils.Interface {
     "issue(address,uint256)": FunctionFragment;
     "mintAllowance()": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
-    "setLimits(uint256,uint256)": FunctionFragment;
+    "setLimits(uint256,uint256,uint256)": FunctionFragment;
     "setTokenInfo(address,bool,bool)": FunctionFragment;
+    "setTokensInfo(address[],bool[],bool[])": FunctionFragment;
   };
 
   getFunction(
@@ -44,6 +45,7 @@ export interface IIssuerInterface extends utils.Interface {
       | "setCouponContract"
       | "setLimits"
       | "setTokenInfo"
+      | "setTokensInfo"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -64,11 +66,15 @@ export interface IIssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setLimits",
-    values: [BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setTokenInfo",
     values: [string, boolean, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setTokensInfo",
+    values: [string[], boolean[], boolean[]]
   ): string;
 
   decodeFunctionResult(
@@ -89,14 +95,20 @@ export interface IIssuerInterface extends utils.Interface {
     functionFragment: "setTokenInfo",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTokensInfo",
+    data: BytesLike
+  ): Result;
 
   events: {
     "CouponsIssued(address,address,uint256,uint256)": EventFragment;
     "TokenWhitelisted(address,bool,bool,uint256)": EventFragment;
+    "TokensWhiteListed(address[],bool[],uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "CouponsIssued"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokenWhitelisted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokensWhiteListed"): EventFragment;
 }
 
 export interface CouponsIssuedEventObject {
@@ -125,6 +137,19 @@ export type TokenWhitelistedEvent = TypedEvent<
 
 export type TokenWhitelistedEventFilter =
   TypedEventFilter<TokenWhitelistedEvent>;
+
+export interface TokensWhiteListedEventObject {
+  tokens: string[];
+  burnable: boolean[];
+  timestamp: BigNumber;
+}
+export type TokensWhiteListedEvent = TypedEvent<
+  [string[], boolean[], BigNumber],
+  TokensWhiteListedEventObject
+>;
+
+export type TokensWhiteListedEventFilter =
+  TypedEventFilter<TokensWhiteListedEvent>;
 
 export interface IIssuer extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -176,6 +201,7 @@ export interface IIssuer extends BaseContract {
     setLimits(
       allowance: BigNumberish,
       rate: BigNumberish,
+      lockDuration: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -183,6 +209,13 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setTokensInfo(
+      token: string[],
+      enabled: boolean[],
+      burnable: boolean[],
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
@@ -207,6 +240,7 @@ export interface IIssuer extends BaseContract {
   setLimits(
     allowance: BigNumberish,
     rate: BigNumberish,
+    lockDuration: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -217,6 +251,13 @@ export interface IIssuer extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  setTokensInfo(
+    token: string[],
+    enabled: boolean[],
+    burnable: boolean[],
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     currentPrice(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -224,7 +265,7 @@ export interface IIssuer extends BaseContract {
       inputToken: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -236,6 +277,7 @@ export interface IIssuer extends BaseContract {
     setLimits(
       allowance: BigNumberish,
       rate: BigNumberish,
+      lockDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -243,6 +285,13 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setTokensInfo(
+      token: string[],
+      enabled: boolean[],
+      burnable: boolean[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -273,6 +322,17 @@ export interface IIssuer extends BaseContract {
       burnable?: null,
       teraCouponPerToken?: null
     ): TokenWhitelistedEventFilter;
+
+    "TokensWhiteListed(address[],bool[],uint256)"(
+      tokens?: null,
+      burnable?: null,
+      timestamp?: null
+    ): TokensWhiteListedEventFilter;
+    TokensWhiteListed(
+      tokens?: null,
+      burnable?: null,
+      timestamp?: null
+    ): TokensWhiteListedEventFilter;
   };
 
   estimateGas: {
@@ -296,6 +356,7 @@ export interface IIssuer extends BaseContract {
     setLimits(
       allowance: BigNumberish,
       rate: BigNumberish,
+      lockDuration: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -303,6 +364,13 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setTokensInfo(
+      token: string[],
+      enabled: boolean[],
+      burnable: boolean[],
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
@@ -331,6 +399,7 @@ export interface IIssuer extends BaseContract {
     setLimits(
       allowance: BigNumberish,
       rate: BigNumberish,
+      lockDuration: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -338,6 +407,13 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setTokensInfo(
+      token: string[],
+      enabled: boolean[],
+      burnable: boolean[],
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

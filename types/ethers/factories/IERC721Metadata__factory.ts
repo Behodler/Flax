@@ -15,32 +15,32 @@ const _abi = [
     name: "approve",
     inputs: [
       {
-        name: "_approved",
+        name: "to",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
       },
     ],
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "balanceOf",
     inputs: [
       {
-        name: "_owner",
+        name: "owner",
         type: "address",
         internalType: "address",
       },
     ],
     outputs: [
       {
-        name: "",
+        name: "balance",
         type: "uint256",
         internalType: "uint256",
       },
@@ -52,14 +52,14 @@ const _abi = [
     name: "getApproved",
     inputs: [
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
       },
     ],
     outputs: [
       {
-        name: "",
+        name: "operator",
         type: "address",
         internalType: "address",
       },
@@ -71,12 +71,12 @@ const _abi = [
     name: "isApprovedForAll",
     inputs: [
       {
-        name: "_owner",
+        name: "owner",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_operator",
+        name: "operator",
         type: "address",
         internalType: "address",
       },
@@ -96,7 +96,7 @@ const _abi = [
     inputs: [],
     outputs: [
       {
-        name: "_name",
+        name: "",
         type: "string",
         internalType: "string",
       },
@@ -108,14 +108,14 @@ const _abi = [
     name: "ownerOf",
     inputs: [
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
       },
     ],
     outputs: [
       {
-        name: "",
+        name: "owner",
         type: "address",
         internalType: "address",
       },
@@ -127,40 +127,40 @@ const _abi = [
     name: "safeTransferFrom",
     inputs: [
       {
-        name: "_from",
+        name: "from",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_to",
+        name: "to",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
       },
     ],
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "safeTransferFrom",
     inputs: [
       {
-        name: "_from",
+        name: "from",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_to",
+        name: "to",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
       },
@@ -171,19 +171,19 @@ const _abi = [
       },
     ],
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
     name: "setApprovalForAll",
     inputs: [
       {
-        name: "_operator",
+        name: "operator",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_approved",
+        name: "approved",
         type: "bool",
         internalType: "bool",
       },
@@ -196,7 +196,7 @@ const _abi = [
     name: "supportsInterface",
     inputs: [
       {
-        name: "interfaceID",
+        name: "interfaceId",
         type: "bytes4",
         internalType: "bytes4",
       },
@@ -216,7 +216,7 @@ const _abi = [
     inputs: [],
     outputs: [
       {
-        name: "_symbol",
+        name: "",
         type: "string",
         internalType: "string",
       },
@@ -228,7 +228,7 @@ const _abi = [
     name: "tokenURI",
     inputs: [
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
       },
@@ -247,42 +247,42 @@ const _abi = [
     name: "transferFrom",
     inputs: [
       {
-        name: "_from",
+        name: "from",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_to",
+        name: "to",
         type: "address",
         internalType: "address",
       },
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
       },
     ],
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
   },
   {
     type: "event",
     name: "Approval",
     inputs: [
       {
-        name: "_owner",
+        name: "owner",
         type: "address",
         indexed: true,
         internalType: "address",
       },
       {
-        name: "_approved",
+        name: "approved",
         type: "address",
         indexed: true,
         internalType: "address",
       },
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         indexed: true,
         internalType: "uint256",
@@ -295,19 +295,19 @@ const _abi = [
     name: "ApprovalForAll",
     inputs: [
       {
-        name: "_owner",
+        name: "owner",
         type: "address",
         indexed: true,
         internalType: "address",
       },
       {
-        name: "_operator",
+        name: "operator",
         type: "address",
         indexed: true,
         internalType: "address",
       },
       {
-        name: "_approved",
+        name: "approved",
         type: "bool",
         indexed: false,
         internalType: "bool",
@@ -320,19 +320,19 @@ const _abi = [
     name: "Transfer",
     inputs: [
       {
-        name: "_from",
+        name: "from",
         type: "address",
         indexed: true,
         internalType: "address",
       },
       {
-        name: "_to",
+        name: "to",
         type: "address",
         indexed: true,
         internalType: "address",
       },
       {
-        name: "_tokenId",
+        name: "tokenId",
         type: "uint256",
         indexed: true,
         internalType: "uint256",

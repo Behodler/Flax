@@ -41,7 +41,13 @@ const _abi = [
         internalType: "uint256",
       },
     ],
-    outputs: [],
+    outputs: [
+      {
+        name: "nft",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
@@ -84,6 +90,11 @@ const _abi = [
         type: "uint256",
         internalType: "uint256",
       },
+      {
+        name: "lockDuration",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -106,6 +117,29 @@ const _abi = [
         name: "burnable",
         type: "bool",
         internalType: "bool",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setTokensInfo",
+    inputs: [
+      {
+        name: "token",
+        type: "address[]",
+        internalType: "address[]",
+      },
+      {
+        name: "enabled",
+        type: "bool[]",
+        internalType: "bool[]",
+      },
+      {
+        name: "burnable",
+        type: "bool[]",
+        internalType: "bool[]",
       },
     ],
     outputs: [],
@@ -166,6 +200,31 @@ const _abi = [
       },
       {
         name: "teraCouponPerToken",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "TokensWhiteListed",
+    inputs: [
+      {
+        name: "tokens",
+        type: "address[]",
+        indexed: false,
+        internalType: "address[]",
+      },
+      {
+        name: "burnable",
+        type: "bool[]",
+        indexed: false,
+        internalType: "bool[]",
+      },
+      {
+        name: "timestamp",
         type: "uint256",
         indexed: false,
         internalType: "uint256",

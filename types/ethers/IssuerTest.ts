@@ -72,6 +72,8 @@ export interface IssuerTestInterface extends utils.Interface {
     "test_issue_burnable_token()": FunctionFragment;
     "test_issue_fail_on_disabled_token()": FunctionFragment;
     "test_issue_non_burnable_token()": FunctionFragment;
+    "test_one_coupon_per_token_per_year_growth()": FunctionFragment;
+    "test_set_many_tokens_info()": FunctionFragment;
   };
 
   getFunction(
@@ -95,6 +97,8 @@ export interface IssuerTestInterface extends utils.Interface {
       | "test_issue_burnable_token"
       | "test_issue_fail_on_disabled_token"
       | "test_issue_non_burnable_token"
+      | "test_one_coupon_per_token_per_year_growth"
+      | "test_set_many_tokens_info"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "IS_TEST", values?: undefined): string;
@@ -164,6 +168,14 @@ export interface IssuerTestInterface extends utils.Interface {
     functionFragment: "test_issue_non_burnable_token",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "test_one_coupon_per_token_per_year_growth",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_set_many_tokens_info",
+    values?: undefined
+  ): string;
 
   decodeFunctionResult(functionFragment: "IS_TEST", data: BytesLike): Result;
   decodeFunctionResult(
@@ -230,6 +242,14 @@ export interface IssuerTestInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "test_issue_non_burnable_token",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_one_coupon_per_token_per_year_growth",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_set_many_tokens_info",
     data: BytesLike
   ): Result;
 
@@ -622,6 +642,14 @@ export interface IssuerTest extends BaseContract {
     test_issue_non_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
+
+    test_one_coupon_per_token_per_year_growth(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_set_many_tokens_info(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
   };
 
   IS_TEST(overrides?: CallOverrides): Promise<boolean>;
@@ -684,6 +712,14 @@ export interface IssuerTest extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  test_one_coupon_per_token_per_year_growth(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_set_many_tokens_info(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     IS_TEST(overrides?: CallOverrides): Promise<boolean>;
 
@@ -730,6 +766,12 @@ export interface IssuerTest extends BaseContract {
     test_issue_fail_on_disabled_token(overrides?: CallOverrides): Promise<void>;
 
     test_issue_non_burnable_token(overrides?: CallOverrides): Promise<void>;
+
+    test_one_coupon_per_token_per_year_growth(
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    test_set_many_tokens_info(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -883,6 +925,14 @@ export interface IssuerTest extends BaseContract {
     test_issue_non_burnable_token(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
+
+    test_one_coupon_per_token_per_year_growth(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_set_many_tokens_info(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -937,6 +987,14 @@ export interface IssuerTest extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     test_issue_non_burnable_token(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_one_coupon_per_token_per_year_growth(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_set_many_tokens_info(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

@@ -19,7 +19,7 @@ import type {
   OnEvent,
 } from "./common";
 
-export interface IERC165Interface extends utils.Interface {
+export interface ERC165Interface extends utils.Interface {
   functions: {
     "supportsInterface(bytes4)": FunctionFragment;
   };
@@ -39,12 +39,12 @@ export interface IERC165Interface extends utils.Interface {
   events: {};
 }
 
-export interface IERC165 extends BaseContract {
+export interface ERC165 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IERC165Interface;
+  interface: ERC165Interface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

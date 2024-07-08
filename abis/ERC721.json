@@ -1,5 +1,21 @@
 [
   {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "name_",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "symbol_",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
     "type": "function",
     "name": "approve",
     "inputs": [
@@ -29,7 +45,7 @@
     ],
     "outputs": [
       {
-        "name": "balance",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -48,7 +64,7 @@
     ],
     "outputs": [
       {
-        "name": "operator",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
@@ -81,6 +97,19 @@
   },
   {
     "type": "function",
+    "name": "name",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "ownerOf",
     "inputs": [
       {
@@ -91,7 +120,7 @@
     ],
     "outputs": [
       {
-        "name": "owner",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
@@ -188,56 +217,32 @@
   },
   {
     "type": "function",
-    "name": "tokenByIndex",
-    "inputs": [
-      {
-        "name": "index",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "tokenOfOwnerByIndex",
-    "inputs": [
-      {
-        "name": "owner",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "index",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "totalSupply",
+    "name": "symbol",
     "inputs": [],
     "outputs": [
       {
         "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "tokenURI",
+    "inputs": [
+      {
+        "name": "tokenId",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "view"

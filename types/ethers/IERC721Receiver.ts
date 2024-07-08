@@ -4,8 +4,11 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
+  ContractTransaction,
+  Overrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -19,32 +22,32 @@ import type {
   OnEvent,
 } from "./common";
 
-export interface IERC165Interface extends utils.Interface {
+export interface IERC721ReceiverInterface extends utils.Interface {
   functions: {
-    "supportsInterface(bytes4)": FunctionFragment;
+    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "supportsInterface"): FunctionFragment;
+  getFunction(nameOrSignatureOrTopic: "onERC721Received"): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "supportsInterface",
-    values: [BytesLike]
+    functionFragment: "onERC721Received",
+    values: [string, string, BigNumberish, BytesLike]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "supportsInterface",
+    functionFragment: "onERC721Received",
     data: BytesLike
   ): Result;
 
   events: {};
 }
 
-export interface IERC165 extends BaseContract {
+export interface IERC721Receiver extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IERC165Interface;
+  interface: IERC721ReceiverInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -66,37 +69,52 @@ export interface IERC165 extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    supportsInterface(
-      interfaceId: BytesLike,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    onERC721Received(
+      operator: string,
+      from: string,
+      tokenId: BigNumberish,
+      data: BytesLike,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
   };
 
-  supportsInterface(
-    interfaceId: BytesLike,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+  onERC721Received(
+    operator: string,
+    from: string,
+    tokenId: BigNumberish,
+    data: BytesLike,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    supportsInterface(
-      interfaceId: BytesLike,
+    onERC721Received(
+      operator: string,
+      from: string,
+      tokenId: BigNumberish,
+      data: BytesLike,
       overrides?: CallOverrides
-    ): Promise<boolean>;
+    ): Promise<string>;
   };
 
   filters: {};
 
   estimateGas: {
-    supportsInterface(
-      interfaceId: BytesLike,
-      overrides?: CallOverrides
+    onERC721Received(
+      operator: string,
+      from: string,
+      tokenId: BigNumberish,
+      data: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    supportsInterface(
-      interfaceId: BytesLike,
-      overrides?: CallOverrides
+    onERC721Received(
+      operator: string,
+      from: string,
+      tokenId: BigNumberish,
+      data: BytesLike,
+      overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };
 }

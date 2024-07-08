@@ -4,12 +4,25 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IERC721Enumerable,
-  IERC721EnumerableInterface,
-} from "../IERC721Enumerable";
+import type { ERC721, ERC721Interface } from "../ERC721";
 
 const _abi = [
+  {
+    type: "constructor",
+    inputs: [
+      {
+        name: "name_",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "symbol_",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
   {
     type: "function",
     name: "approve",
@@ -40,7 +53,7 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "balance",
+        name: "",
         type: "uint256",
         internalType: "uint256",
       },
@@ -59,7 +72,7 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "operator",
+        name: "",
         type: "address",
         internalType: "address",
       },
@@ -92,6 +105,19 @@ const _abi = [
   },
   {
     type: "function",
+    name: "name",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "ownerOf",
     inputs: [
       {
@@ -102,7 +128,7 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "owner",
+        name: "",
         type: "address",
         internalType: "address",
       },
@@ -199,56 +225,32 @@ const _abi = [
   },
   {
     type: "function",
-    name: "tokenByIndex",
-    inputs: [
-      {
-        name: "index",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "tokenOfOwnerByIndex",
-    inputs: [
-      {
-        name: "owner",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "index",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "totalSupply",
+    name: "symbol",
     inputs: [],
     outputs: [
       {
         name: "",
+        type: "string",
+        internalType: "string",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "tokenURI",
+    inputs: [
+      {
+        name: "tokenId",
         type: "uint256",
         internalType: "uint256",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "string",
+        internalType: "string",
       },
     ],
     stateMutability: "view",
@@ -353,15 +355,12 @@ const _abi = [
   },
 ] as const;
 
-export class IERC721Enumerable__factory {
+export class ERC721__factory {
   static readonly abi = _abi;
-  static createInterface(): IERC721EnumerableInterface {
-    return new utils.Interface(_abi) as IERC721EnumerableInterface;
+  static createInterface(): ERC721Interface {
+    return new utils.Interface(_abi) as ERC721Interface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IERC721Enumerable {
-    return new Contract(address, _abi, signerOrProvider) as IERC721Enumerable;
+  static connect(address: string, signerOrProvider: Signer | Provider): ERC721 {
+    return new Contract(address, _abi, signerOrProvider) as ERC721;
   }
 }
