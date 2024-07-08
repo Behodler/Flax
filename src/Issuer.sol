@@ -6,20 +6,31 @@ import "./ICoupon.sol";
 import "./Errors.sol";
 import "@oz_flax/contracts/utils/ReentrancyGuard.sol";
 import "./IIssuer.sol";
+import "./HedgeyAdapter.sol";
+import {TokenLockupPlans} from "@hedgey/lockup/TokenLockupPlans.sol";
+
 
 contract Issuer is IIssuer, Ownable, ReentrancyGuard {
     mapping(address => TokenInfo) public whitelist;
     uint public override mintAllowance; //max mint allowance per tx
     ICoupon public couponContract;
     uint public teraCouponPerTokenPerSecond; // growth rate of Flax price in terms of token.
+    HedgeyAdapter stream;
+    uint public lockupDuration;
 
-    constructor(address couponAddress) Ownable(msg.sender) {
+    constructor(address couponAddress, address streamAddress) Ownable(msg.sender) {
         couponContract = ICoupon(couponAddress);
+        stream = HedgeyAdapter(streamAddress);
     }
 
-    function setLimits(uint allowance, uint rate) external override onlyOwner {
+    function setLimits(
+        uint allowance,
+        uint rate,
+        uint lockupDuration_Days
+    ) external override onlyOwner {
         mintAllowance = allowance;
         teraCouponPerTokenPerSecond = rate;
+        lockupDuration = lockupDuration_Days;
     }
 
     function setTokensInfo(
@@ -67,7 +78,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
     function issue(
         address inputToken,
         uint amount
-    ) external override nonReentrant {
+    ) external override nonReentrant returns (uint nft) {
         require(
             whitelist[inputToken].enabled,
             "Token not enabled for issuance"
@@ -94,7 +105,8 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         }
 
         // Mint coupons
-        couponContract.mint(coupons, msg.sender);
+        couponContract.mint(coupons, address(stream));
+        nft = stream.lock(msg.sender, coupons, lockupDuration);
 
         //nonReentrant modifier makes the position of this line safe
         whitelist[inputToken].lastminted_timestamp = block.timestamp;

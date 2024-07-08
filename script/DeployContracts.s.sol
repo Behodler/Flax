@@ -39,20 +39,21 @@ contract DeployContracts is Script {
 
         PyroSCX_EYE.mint(uint((323220 ether) / uint(2200)), msg.sender);
         // Deploy Issuer with the address of Coupon
-        Issuer issuer = new Issuer(address(coupon));
+
+        TokenLockupPlans tokenLockupPlan = new TokenLockupPlans("Hedge", "HDG");
+        HedgeyAdapter hedgeyAdapter = new HedgeyAdapter(
+            address(coupon),
+            address(tokenLockupPlan)
+        );
+        Issuer issuer = new Issuer(address(coupon), address(hedgeyAdapter));
         coupon.setMinter(address(issuer), true);
         PyroSCX_EYE.approve(address(issuer), uint(type(uint).max));
-        issuer.setLimits(100 ether, 10_000_000_000);
+        issuer.setLimits(100 ether, 10_000_000_000, 1);
         issuer.setTokenInfo(address(mockInputTokenBurnable), true, true);
         issuer.setTokenInfo(address(SCX), true, true);
         issuer.setTokenInfo(address(PyroSCX_EYE), true, true);
 
-
-        issuer.setTokenInfo(
-            address(mockInputTokenNonBurnable),
-            true,
-            false
-        );
+        issuer.setTokenInfo(address(mockInputTokenNonBurnable), true, false);
 
         vm.stopBroadcast();
         address multicall2Address = multi.run();
@@ -81,6 +82,8 @@ contract DeployContracts is Script {
                 '", "Issuer":"',
                 addressToString.toAsciiString(address(issuer)),
                 '", "Multicall":"',
+                addressToString.toAsciiString(address(hedgeyAdapter)),
+                '", "HedgeyAdapter":"',
                 addressToString.toAsciiString(multicall2Address),
                 '", "msgsender":"',
                 addressToString.toAsciiString(msg.sender),

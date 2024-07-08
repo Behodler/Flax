@@ -12,7 +12,7 @@ abstract contract IIssuer {
 
     function currentPrice(address token) public view virtual returns (uint);
 
-    function setLimits(uint allowance, uint rate) external virtual;
+    function setLimits(uint allowance, uint rate, uint lockDuration) external virtual;
 
     function setTokenInfo(
         address token,
@@ -28,7 +28,7 @@ abstract contract IIssuer {
 
     function setCouponContract(address newCouponAddress) external virtual;
 
-    function issue(address inputToken, uint amount) external virtual;
+    function issue(address inputToken, uint amount) external virtual returns (uint nft);
 
     // Events
     event TokenWhitelisted(
