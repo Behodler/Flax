@@ -1,1 +1,3 @@
 @oz_flax/contracts=lib/openzeppelin-contracts/contracts
+@oz_hedgey/contracts=lib/Locked_VestingTokenPlans/contracts/oz
+@hedgey/lockup=lib/Locked_VestingTokenPlans/contracts/LockupPlans
