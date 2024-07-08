@@ -22,13 +22,29 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         teraCouponPerTokenPerSecond = rate;
     }
 
+    function setTokensInfo(
+        address[] memory tokens,
+        bool[] memory enabled,
+        bool[] memory burnable
+    ) external override onlyOwner {
+        for (uint i = 0; i < tokens.length; i++) {
+            _setTokenInfo(tokens[i], enabled[i], burnable[i]);
+        }
+        emit TokensWhiteListed(tokens, enabled, block.timestamp);
+    }
+
     function setTokenInfo(
         address token,
         bool enabled,
         bool burnable
     ) external override onlyOwner {
-        whitelist[token] = TokenInfo(enabled, burnable, block.timestamp);
+        _setTokenInfo(token, enabled, burnable);
+
         emit TokenWhitelisted(token, enabled, burnable, block.timestamp);
+    }
+
+    function _setTokenInfo(address token, bool enabled, bool burnable) private {
+        whitelist[token] = TokenInfo(enabled, burnable, block.timestamp);
     }
 
     function setCouponContract(

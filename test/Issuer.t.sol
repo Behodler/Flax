@@ -50,6 +50,62 @@ contract IssuerTest is Test {
         nonIncreaser = address(0x3);
     }
 
+    function test_set_many_tokens_info() public {
+        // Before state
+        (bool enabled_burnable_before, bool burnable_burnable_before, ) = issuer
+            .whitelist(address(burnableToken));
+        (bool enabled_non_before, bool burnable_non_before, ) = issuer
+            .whitelist(address(nonBurnableToken));
+        (bool enabled_one_before, bool burnable_one_before, ) = issuer
+            .whitelist(address(oneToOnetoken));
+
+        // Assertions for before state
+        vm.assertEq(enabled_burnable_before, true);
+        vm.assertEq(burnable_burnable_before, true);
+        vm.assertEq(enabled_non_before, true);
+        vm.assertEq(burnable_non_before, false);
+        vm.assertEq(enabled_one_before, true);
+        vm.assertEq(burnable_one_before, false);
+
+        // Setting up the arrays
+        address[] memory tokenAddresses = new address[](3);
+        bool[] memory enabled = new bool[](3);
+        bool[] memory burnable = new bool[](3);
+
+        tokenAddresses[0] = address(burnableToken);
+        tokenAddresses[1] = address(nonBurnableToken);
+        tokenAddresses[2] = address(oneToOnetoken);
+
+        enabled[0] = false;
+        enabled[1] = true;
+        enabled[2] = false;
+
+        burnable[0] = false;
+        burnable[1] = true;
+        burnable[2] = false;
+
+        // Setting token info
+        issuer.setTokensInfo(tokenAddresses, enabled, burnable);
+
+        // After state
+        (bool enabled_burnable_after, bool burnable_burnable_after, ) = issuer
+            .whitelist(address(burnableToken));
+        (bool enabled_non_after, bool burnable_non_after, ) = issuer.whitelist(
+            address(nonBurnableToken)
+        );
+        (bool enabled_one_after, bool burnable_one_after, ) = issuer.whitelist(
+            address(oneToOnetoken)
+        );
+
+        // Assertions for after state
+        vm.assertEq(enabled_burnable_after, false);
+        vm.assertEq(burnable_burnable_after, false);
+        vm.assertEq(enabled_non_after, true);
+        vm.assertEq(burnable_non_after, true);
+        vm.assertEq(enabled_one_after, false);
+        vm.assertEq(burnable_one_after, false);
+    }
+
     function test_currentPrice_is_accurate() public {
         uint currentTime = block.timestamp;
         //reset token price to zero at current timestamp

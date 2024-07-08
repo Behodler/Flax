@@ -20,6 +20,12 @@ abstract contract IIssuer {
         bool burnable
     ) external virtual;
 
+    function setTokensInfo(
+        address[] memory token,
+        bool[] memory enabled,
+        bool[] memory burnable
+    ) external virtual;
+
     function setCouponContract(address newCouponAddress) external virtual;
 
     function issue(address inputToken, uint amount) external virtual;
@@ -31,6 +37,7 @@ abstract contract IIssuer {
         bool burnable,
         uint teraCouponPerToken
     );
+    event TokensWhiteListed(address[] tokens, bool[] burnable, uint timestamp);
     event CouponsIssued(
         address indexed user,
         address indexed token,
