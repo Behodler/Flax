@@ -190,6 +190,35 @@ contract IssuerTest is Test {
         issuer.issue(address(nonBurnableToken), 2e18);
     }
 
+    //when deploying on mainnet, we want to initially set growth low so that no one misses out
+    function test_one_coupon_per_token_per_year_growth() public {
+        //expection: 32150 tera is ONE per year.
+
+        //resets price to zero
+        issuer.setLimits(100 ether, 32150);
+
+        uint priceBefore = issuer.currentPrice(address(nonBurnableToken));
+        vm.assertEq(priceBefore, 0);
+        //jump 1 year
+        vm.roll(block.number + 1);
+        vm.warp(block.timestamp + 31104000);
+
+        uint priceAfter = issuer.currentPrice(address(nonBurnableToken));
+        vm.assertEq(priceAfter, 999993600000);
+
+        uint flx_balanceBefore = couponContract.balanceOf(address(this));
+        nonBurnableToken.approve(address(issuer), 1e18);
+        nonBurnableToken.mint(address(this), 1 ether);
+        issuer.issue(address(nonBurnableToken), 1 ether);
+        uint flx_balanceAfter = couponContract.balanceOf(address(this));
+
+        uint increase = flx_balanceAfter - flx_balanceBefore;
+
+        //precision loss
+        vm.assertGt(increase, (1 ether * 999) / 1000);
+        vm.assertLt(increase, (1 ether * 1001) / 1000);
+    }
+
     function test_issue_fail_on_disabled_token() public {
         issuer.setTokenInfo(address(nonBurnableToken), false, false); // Disable the token
         vm.prank(owner);
