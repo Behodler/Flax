@@ -6,24 +6,27 @@ abstract contract IIssuer {
         bool enabled;
         bool burnable;
         uint lastminted_timestamp;
+        uint teraCouponPerTokenPerSecond;
     }
 
     function mintAllowance() external virtual returns (uint);
 
     function currentPrice(address token) public view virtual returns (uint);
 
-    function setLimits(uint allowance, uint rate, uint lockDuration) external virtual;
+    function setLimits(uint allowance, uint lockDuration,uint targetedMintsPerday) external virtual;
 
     function setTokenInfo(
         address token,
         bool enabled,
-        bool burnable
+        bool burnable,
+        uint startingRate
     ) external virtual;
 
     function setTokensInfo(
-        address[] memory token,
+address[] memory tokens,
         bool[] memory enabled,
-        bool[] memory burnable
+        bool[] memory burnable,
+        uint [] memory startingRate
     ) external virtual;
 
     function setCouponContract(address newCouponAddress) external virtual;

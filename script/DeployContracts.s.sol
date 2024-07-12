@@ -48,12 +48,22 @@ contract DeployContracts is Script {
         Issuer issuer = new Issuer(address(coupon), address(hedgeyAdapter));
         coupon.setMinter(address(issuer), true);
         PyroSCX_EYE.approve(address(issuer), uint(type(uint).max));
-        issuer.setLimits(100 ether, 10_000_000_000, 1);
-        issuer.setTokenInfo(address(mockInputTokenBurnable), true, true);
-        issuer.setTokenInfo(address(SCX), true, true);
-        issuer.setTokenInfo(address(PyroSCX_EYE), true, true);
+        issuer.setLimits(100 ether, 1,1);
+        issuer.setTokenInfo(
+            address(mockInputTokenBurnable),
+            true,
+            true,
+            10_000_000_000
+        );
+        issuer.setTokenInfo(address(SCX), true, true, 10_000_000_000);
+        issuer.setTokenInfo(address(PyroSCX_EYE), true, true, 10_000_000_000);
 
-        issuer.setTokenInfo(address(mockInputTokenNonBurnable), true, false);
+        issuer.setTokenInfo(
+            address(mockInputTokenNonBurnable),
+            true,
+            false,
+            10_000_000_000
+        );
 
         vm.stopBroadcast();
         address multicall2Address = multi.run();
