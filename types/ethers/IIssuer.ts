@@ -33,8 +33,8 @@ export interface IIssuerInterface extends utils.Interface {
     "mintAllowance()": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
     "setLimits(uint256,uint256,uint256)": FunctionFragment;
-    "setTokenInfo(address,bool,bool)": FunctionFragment;
-    "setTokensInfo(address[],bool[],bool[])": FunctionFragment;
+    "setTokenInfo(address,bool,bool,uint256)": FunctionFragment;
+    "setTokensInfo(address[],bool[],bool[],uint256[])": FunctionFragment;
   };
 
   getFunction(
@@ -70,11 +70,11 @@ export interface IIssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setTokenInfo",
-    values: [string, boolean, boolean]
+    values: [string, boolean, boolean, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setTokensInfo",
-    values: [string[], boolean[], boolean[]]
+    values: [string[], boolean[], boolean[], BigNumberish[]]
   ): string;
 
   decodeFunctionResult(
@@ -200,8 +200,8 @@ export interface IIssuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockDuration: BigNumberish,
+      targetedMintsPerday: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -209,13 +209,15 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setTokensInfo(
-      token: string[],
+      tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
@@ -239,8 +241,8 @@ export interface IIssuer extends BaseContract {
 
   setLimits(
     allowance: BigNumberish,
-    rate: BigNumberish,
     lockDuration: BigNumberish,
+    targetedMintsPerday: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -248,13 +250,15 @@ export interface IIssuer extends BaseContract {
     token: string,
     enabled: boolean,
     burnable: boolean,
+    startingRate: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setTokensInfo(
-    token: string[],
+    tokens: string[],
     enabled: boolean[],
     burnable: boolean[],
+    startingRate: BigNumberish[],
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -276,8 +280,8 @@ export interface IIssuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockDuration: BigNumberish,
+      targetedMintsPerday: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -285,13 +289,15 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setTokensInfo(
-      token: string[],
+      tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -355,8 +361,8 @@ export interface IIssuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockDuration: BigNumberish,
+      targetedMintsPerday: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -364,13 +370,15 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setTokensInfo(
-      token: string[],
+      tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
@@ -398,8 +406,8 @@ export interface IIssuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockDuration: BigNumberish,
+      targetedMintsPerday: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -407,13 +415,15 @@ export interface IIssuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setTokensInfo(
-      token: string[],
+      tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

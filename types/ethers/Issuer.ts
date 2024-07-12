@@ -37,9 +37,8 @@ export interface IssuerInterface extends utils.Interface {
     "renounceOwnership()": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
     "setLimits(uint256,uint256,uint256)": FunctionFragment;
-    "setTokenInfo(address,bool,bool)": FunctionFragment;
-    "setTokensInfo(address[],bool[],bool[])": FunctionFragment;
-    "teraCouponPerTokenPerSecond()": FunctionFragment;
+    "setTokenInfo(address,bool,bool,uint256)": FunctionFragment;
+    "setTokensInfo(address[],bool[],bool[],uint256[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "whitelist(address)": FunctionFragment;
   };
@@ -57,7 +56,6 @@ export interface IssuerInterface extends utils.Interface {
       | "setLimits"
       | "setTokenInfo"
       | "setTokensInfo"
-      | "teraCouponPerTokenPerSecond"
       | "transferOwnership"
       | "whitelist"
   ): FunctionFragment;
@@ -97,15 +95,11 @@ export interface IssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setTokenInfo",
-    values: [string, boolean, boolean]
+    values: [string, boolean, boolean, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setTokensInfo",
-    values: [string[], boolean[], boolean[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "teraCouponPerTokenPerSecond",
-    values?: undefined
+    values: [string[], boolean[], boolean[], BigNumberish[]]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -146,10 +140,6 @@ export interface IssuerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setTokensInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "teraCouponPerTokenPerSecond",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -280,8 +270,8 @@ export interface Issuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockupDuration_Days: BigNumberish,
+      _targetedMintsPerday: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -289,6 +279,7 @@ export interface Issuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -296,12 +287,9 @@ export interface Issuer extends BaseContract {
       tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
-
-    teraCouponPerTokenPerSecond(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
 
     transferOwnership(
       newOwner: string,
@@ -312,10 +300,11 @@ export interface Issuer extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, boolean, BigNumber] & {
+      [boolean, boolean, BigNumber, BigNumber] & {
         enabled: boolean;
         burnable: boolean;
         lastminted_timestamp: BigNumber;
+        teraCouponPerTokenPerSecond: BigNumber;
       }
     >;
   };
@@ -347,8 +336,8 @@ export interface Issuer extends BaseContract {
 
   setLimits(
     allowance: BigNumberish,
-    rate: BigNumberish,
     lockupDuration_Days: BigNumberish,
+    _targetedMintsPerday: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -356,6 +345,7 @@ export interface Issuer extends BaseContract {
     token: string,
     enabled: boolean,
     burnable: boolean,
+    startingRate: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -363,10 +353,9 @@ export interface Issuer extends BaseContract {
     tokens: string[],
     enabled: boolean[],
     burnable: boolean[],
+    startingRate: BigNumberish[],
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
-
-  teraCouponPerTokenPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferOwnership(
     newOwner: string,
@@ -377,10 +366,11 @@ export interface Issuer extends BaseContract {
     arg0: string,
     overrides?: CallOverrides
   ): Promise<
-    [boolean, boolean, BigNumber] & {
+    [boolean, boolean, BigNumber, BigNumber] & {
       enabled: boolean;
       burnable: boolean;
       lastminted_timestamp: BigNumber;
+      teraCouponPerTokenPerSecond: BigNumber;
     }
   >;
 
@@ -410,8 +400,8 @@ export interface Issuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockupDuration_Days: BigNumberish,
+      _targetedMintsPerday: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -419,6 +409,7 @@ export interface Issuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -426,10 +417,9 @@ export interface Issuer extends BaseContract {
       tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
-
-    teraCouponPerTokenPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -440,10 +430,11 @@ export interface Issuer extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [boolean, boolean, BigNumber] & {
+      [boolean, boolean, BigNumber, BigNumber] & {
         enabled: boolean;
         burnable: boolean;
         lastminted_timestamp: BigNumber;
+        teraCouponPerTokenPerSecond: BigNumber;
       }
     >;
   };
@@ -524,8 +515,8 @@ export interface Issuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockupDuration_Days: BigNumberish,
+      _targetedMintsPerday: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -533,6 +524,7 @@ export interface Issuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -540,10 +532,9 @@ export interface Issuer extends BaseContract {
       tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
-
-    teraCouponPerTokenPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -584,8 +575,8 @@ export interface Issuer extends BaseContract {
 
     setLimits(
       allowance: BigNumberish,
-      rate: BigNumberish,
       lockupDuration_Days: BigNumberish,
+      _targetedMintsPerday: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -593,6 +584,7 @@ export interface Issuer extends BaseContract {
       token: string,
       enabled: boolean,
       burnable: boolean,
+      startingRate: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -600,11 +592,8 @@ export interface Issuer extends BaseContract {
       tokens: string[],
       enabled: boolean[],
       burnable: boolean[],
+      startingRate: BigNumberish[],
       overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    teraCouponPerTokenPerSecond(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     transferOwnership(

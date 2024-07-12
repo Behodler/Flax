@@ -5792,12 +5792,12 @@
           "internalType": "uint256"
         },
         {
-          "name": "rate",
+          "name": "lockDuration",
           "type": "uint256",
           "internalType": "uint256"
         },
         {
-          "name": "lockDuration",
+          "name": "targetedMintsPerday",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -5823,6 +5823,11 @@
           "name": "burnable",
           "type": "bool",
           "internalType": "bool"
+        },
+        {
+          "name": "startingRate",
+          "type": "uint256",
+          "internalType": "uint256"
         }
       ],
       "outputs": [],
@@ -5833,7 +5838,7 @@
       "name": "setTokensInfo",
       "inputs": [
         {
-          "name": "token",
+          "name": "tokens",
           "type": "address[]",
           "internalType": "address[]"
         },
@@ -5846,6 +5851,11 @@
           "name": "burnable",
           "type": "bool[]",
           "internalType": "bool[]"
+        },
+        {
+          "name": "startingRate",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
         }
       ],
       "outputs": [],
@@ -6552,12 +6562,12 @@
           "internalType": "uint256"
         },
         {
-          "name": "rate",
+          "name": "lockupDuration_Days",
           "type": "uint256",
           "internalType": "uint256"
         },
         {
-          "name": "lockupDuration_Days",
+          "name": "_targetedMintsPerday",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -6583,6 +6593,11 @@
           "name": "burnable",
           "type": "bool",
           "internalType": "bool"
+        },
+        {
+          "name": "startingRate",
+          "type": "uint256",
+          "internalType": "uint256"
         }
       ],
       "outputs": [],
@@ -6606,23 +6621,15 @@
           "name": "burnable",
           "type": "bool[]",
           "internalType": "bool[]"
+        },
+        {
+          "name": "startingRate",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
         }
       ],
       "outputs": [],
       "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "teraCouponPerTokenPerSecond",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
     },
     {
       "type": "function",
@@ -6660,6 +6667,11 @@
         },
         {
           "name": "lastminted_timestamp",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "teraCouponPerTokenPerSecond",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -6783,6 +6795,17 @@
         },
         {
           "name": "remaining",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidMintTarget",
+      "inputs": [
+        {
+          "name": "target",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -7044,7 +7067,28 @@
     },
     {
       "type": "function",
+      "name": "test_dynamic_pricing_and_bounds_1_per_day",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "test_dynamic_pricing_and_bounds_2_per_day",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
       "name": "test_excessive_minting",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "test_invalid_mint_target_should_fail",
       "inputs": [],
       "outputs": [],
       "stateMutability": "nonpayable"

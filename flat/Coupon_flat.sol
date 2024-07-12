@@ -274,6 +274,7 @@ abstract contract Context {
 
 error UnauthorizedMinter(address minter, bool hasMintingRight);
 error ExcessiveMinting (uint attemptedAmount, uint remaining);
+error InvalidMintTarget(uint target);
 
 // lib/openzeppelin-contracts/contracts/access/Ownable.sol
 

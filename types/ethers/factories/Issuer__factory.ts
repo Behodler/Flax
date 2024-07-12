@@ -148,12 +148,12 @@ const _abi = [
         internalType: "uint256",
       },
       {
-        name: "rate",
+        name: "lockupDuration_Days",
         type: "uint256",
         internalType: "uint256",
       },
       {
-        name: "lockupDuration_Days",
+        name: "_targetedMintsPerday",
         type: "uint256",
         internalType: "uint256",
       },
@@ -180,6 +180,11 @@ const _abi = [
         type: "bool",
         internalType: "bool",
       },
+      {
+        name: "startingRate",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -203,22 +208,14 @@ const _abi = [
         type: "bool[]",
         internalType: "bool[]",
       },
+      {
+        name: "startingRate",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "teraCouponPerTokenPerSecond",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
   },
   {
     type: "function",
@@ -256,6 +253,11 @@ const _abi = [
       },
       {
         name: "lastminted_timestamp",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "teraCouponPerTokenPerSecond",
         type: "uint256",
         internalType: "uint256",
       },
@@ -379,6 +381,17 @@ const _abi = [
       },
       {
         name: "remaining",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "InvalidMintTarget",
+    inputs: [
+      {
+        name: "target",
         type: "uint256",
         internalType: "uint256",
       },

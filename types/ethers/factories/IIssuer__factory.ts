@@ -86,12 +86,12 @@ const _abi = [
         internalType: "uint256",
       },
       {
-        name: "rate",
+        name: "lockDuration",
         type: "uint256",
         internalType: "uint256",
       },
       {
-        name: "lockDuration",
+        name: "targetedMintsPerday",
         type: "uint256",
         internalType: "uint256",
       },
@@ -118,6 +118,11 @@ const _abi = [
         type: "bool",
         internalType: "bool",
       },
+      {
+        name: "startingRate",
+        type: "uint256",
+        internalType: "uint256",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -127,7 +132,7 @@ const _abi = [
     name: "setTokensInfo",
     inputs: [
       {
-        name: "token",
+        name: "tokens",
         type: "address[]",
         internalType: "address[]",
       },
@@ -140,6 +145,11 @@ const _abi = [
         name: "burnable",
         type: "bool[]",
         internalType: "bool[]",
+      },
+      {
+        name: "startingRate",
+        type: "uint256[]",
+        internalType: "uint256[]",
       },
     ],
     outputs: [],

@@ -68,7 +68,10 @@ export interface IssuerTestInterface extends utils.Interface {
     "targetSenders()": FunctionFragment;
     "test_access_control()": FunctionFragment;
     "test_currentPrice_is_accurate()": FunctionFragment;
+    "test_dynamic_pricing_and_bounds_1_per_day()": FunctionFragment;
+    "test_dynamic_pricing_and_bounds_2_per_day()": FunctionFragment;
     "test_excessive_minting()": FunctionFragment;
+    "test_invalid_mint_target_should_fail()": FunctionFragment;
     "test_issue_burnable_token()": FunctionFragment;
     "test_issue_fail_on_disabled_token()": FunctionFragment;
     "test_issue_non_burnable_token()": FunctionFragment;
@@ -93,7 +96,10 @@ export interface IssuerTestInterface extends utils.Interface {
       | "targetSenders"
       | "test_access_control"
       | "test_currentPrice_is_accurate"
+      | "test_dynamic_pricing_and_bounds_1_per_day"
+      | "test_dynamic_pricing_and_bounds_2_per_day"
       | "test_excessive_minting"
+      | "test_invalid_mint_target_should_fail"
       | "test_issue_burnable_token"
       | "test_issue_fail_on_disabled_token"
       | "test_issue_non_burnable_token"
@@ -153,7 +159,19 @@ export interface IssuerTestInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "test_dynamic_pricing_and_bounds_1_per_day",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_dynamic_pricing_and_bounds_2_per_day",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "test_excessive_minting",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "test_invalid_mint_target_should_fail",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -229,7 +247,19 @@ export interface IssuerTestInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "test_dynamic_pricing_and_bounds_1_per_day",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_dynamic_pricing_and_bounds_2_per_day",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "test_excessive_minting",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "test_invalid_mint_target_should_fail",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -627,7 +657,19 @@ export interface IssuerTest extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    test_dynamic_pricing_and_bounds_1_per_day(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_dynamic_pricing_and_bounds_2_per_day(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     test_excessive_minting(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    test_invalid_mint_target_should_fail(
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -696,7 +738,19 @@ export interface IssuerTest extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  test_dynamic_pricing_and_bounds_1_per_day(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_dynamic_pricing_and_bounds_2_per_day(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   test_excessive_minting(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  test_invalid_mint_target_should_fail(
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -759,7 +813,19 @@ export interface IssuerTest extends BaseContract {
 
     test_currentPrice_is_accurate(overrides?: CallOverrides): Promise<void>;
 
+    test_dynamic_pricing_and_bounds_1_per_day(
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    test_dynamic_pricing_and_bounds_2_per_day(
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     test_excessive_minting(overrides?: CallOverrides): Promise<void>;
+
+    test_invalid_mint_target_should_fail(
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     test_issue_burnable_token(overrides?: CallOverrides): Promise<void>;
 
@@ -910,7 +976,19 @@ export interface IssuerTest extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    test_dynamic_pricing_and_bounds_1_per_day(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_dynamic_pricing_and_bounds_2_per_day(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     test_excessive_minting(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    test_invalid_mint_target_should_fail(
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -974,7 +1052,19 @@ export interface IssuerTest extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    test_dynamic_pricing_and_bounds_1_per_day(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_dynamic_pricing_and_bounds_2_per_day(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     test_excessive_minting(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    test_invalid_mint_target_should_fail(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

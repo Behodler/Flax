@@ -78,12 +78,12 @@
         "internalType": "uint256"
       },
       {
-        "name": "rate",
+        "name": "lockDuration",
         "type": "uint256",
         "internalType": "uint256"
       },
       {
-        "name": "lockDuration",
+        "name": "targetedMintsPerday",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -109,6 +109,11 @@
         "name": "burnable",
         "type": "bool",
         "internalType": "bool"
+      },
+      {
+        "name": "startingRate",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [],
@@ -119,7 +124,7 @@
     "name": "setTokensInfo",
     "inputs": [
       {
-        "name": "token",
+        "name": "tokens",
         "type": "address[]",
         "internalType": "address[]"
       },
@@ -132,6 +137,11 @@
         "name": "burnable",
         "type": "bool[]",
         "internalType": "bool[]"
+      },
+      {
+        "name": "startingRate",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       }
     ],
     "outputs": [],

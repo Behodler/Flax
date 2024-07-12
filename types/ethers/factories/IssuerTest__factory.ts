@@ -234,7 +234,28 @@ const _abi = [
   },
   {
     type: "function",
+    name: "test_dynamic_pricing_and_bounds_1_per_day",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "test_dynamic_pricing_and_bounds_2_per_day",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "test_excessive_minting",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "test_invalid_mint_target_should_fail",
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",
