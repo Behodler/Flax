@@ -9,11 +9,14 @@ abstract contract IIssuer {
         uint teraCouponPerTokenPerSecond;
     }
 
-    function mintAllowance() external virtual returns (uint);
-
     function currentPrice(address token) public view virtual returns (uint);
 
-    function setLimits(uint allowance, uint lockDuration,uint targetedMintsPerday) external virtual;
+    function setLimits(
+        uint threshold_size,
+        uint days_multiple,
+        uint offset,
+        uint _targetedMintsPerWeek
+    ) external virtual;
 
     function setTokenInfo(
         address token,
@@ -23,15 +26,19 @@ abstract contract IIssuer {
     ) external virtual;
 
     function setTokensInfo(
-address[] memory tokens,
+        address[] memory tokens,
         bool[] memory enabled,
         bool[] memory burnable,
-        uint [] memory startingRate
+        uint[] memory startingRate
     ) external virtual;
 
     function setCouponContract(address newCouponAddress) external virtual;
 
-    function issue(address inputToken, uint amount) external virtual returns (uint nft);
+    function issue(
+        address inputToken,
+        uint amount,
+        address recipient
+    ) external virtual returns (uint nft);
 
     // Events
     event TokenWhitelisted(

@@ -34,6 +34,7 @@ contract IssuerTest is Test {
     address notOwner;
     address increaser;
     address nonIncreaser;
+    address recipient;
     TokenLockupPlans tokenLockupPlan;
     uint standardGrowth = 10_000_000_000;
     HedgeyAdapter hedgeyAdapter;
@@ -54,7 +55,7 @@ contract IssuerTest is Test {
         issuer = new Issuer(address(couponContract), address(hedgeyAdapter));
         couponContract.setMinter(address(issuer), true);
 
-        issuer.setLimits(1000 ether, 1, 1);
+        issuer.setLimits(10000, 60, 1, 1);
 
         issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
         issuer.setTokenInfo(
@@ -74,11 +75,29 @@ contract IssuerTest is Test {
         increaser = address(0x2);
         nonIncreaser = address(0x3);
         user = address(0x4);
+        recipient = address(0x5);
     }
 
     function flxBalance(address holder) private view returns (uint) {
         TokenLockupPlans plan = hedgeyAdapter.tokenLockupPlan();
         return plan.lockedBalances(holder, address(couponContract));
+    }
+
+    function test_invalid_lock_config() public {
+        //max values passing
+        issuer.setLimits(20000, 180, 1460, 7);
+        vm.expectRevert(
+            abi.encodeWithSelector(InvalidLockConfig.selector, 20001, 180, 1460)
+        );
+        issuer.setLimits(20001, 180, 1460, 7);
+        vm.expectRevert(
+            abi.encodeWithSelector(InvalidLockConfig.selector, 20000, 181, 1460)
+        );
+        issuer.setLimits(20000, 181, 1460, 7);
+        vm.expectRevert(
+            abi.encodeWithSelector(InvalidLockConfig.selector, 20000, 180, 1461)
+        );
+        issuer.setLimits(20000, 180, 1461, 7);
     }
 
     function test_set_many_tokens_info() public {
@@ -172,8 +191,8 @@ contract IssuerTest is Test {
     }
 
     function test_dynamic_pricing_and_bounds_1_per_day() public {
-        uint target = 1;
-        issuer.setLimits(1000 ether, 1, target);
+        uint target = 7;
+        issuer.setLimits(1000, 60, 180, target);
 
         burnableToken.mint(user, 100e18);
         uint currentTime = block.timestamp;
@@ -192,12 +211,12 @@ contract IssuerTest is Test {
         );
         uint timeSinceLast = block.timestamp - lastMint;
         uint expectedNewGrowthRate = (growthRate * timeSinceLast) /
-            ((1 days) / target);
+            ((7 days) / target);
 
         vm.assertLt(expectedNewGrowthRate, growthRate);
 
         vm.prank(user);
-        issuer.issue(address(burnableToken), 1e10);
+        issuer.issue(address(burnableToken), 1e10, user);
         vm.stopPrank();
 
         (, , , uint newGrowthRate) = issuer.whitelist(address(burnableToken));
@@ -207,8 +226,8 @@ contract IssuerTest is Test {
     }
 
     function test_dynamic_pricing_and_bounds_2_per_day() public {
-        uint target = 2;
-        issuer.setLimits(1000 ether, 1, target);
+        uint target = 14;
+        issuer.setLimits(1000, 60, 180, target);
 
         burnableToken.mint(user, 100e18);
         uint currentTime = block.timestamp;
@@ -227,14 +246,14 @@ contract IssuerTest is Test {
         );
         uint timeSinceLast = block.timestamp - lastMint;
         uint expectedNewGrowthRate = (growthRate * timeSinceLast) /
-            ((1 days) / target);
+            ((7 days) / target);
 
         vm.assertLt(expectedNewGrowthRate, standardGrowth);
 
         vm.assertLt(1, growthRate);
 
         vm.prank(user);
-        issuer.issue(address(burnableToken), 1e10);
+        issuer.issue(address(burnableToken), 1e10, user);
         vm.stopPrank();
 
         (, , , uint growthRate_post_mint) = issuer.whitelist(
@@ -251,12 +270,12 @@ contract IssuerTest is Test {
         (, , lastMint, growthRate) = issuer.whitelist(address(burnableToken));
         timeSinceLast = block.timestamp - lastMint;
         uint expectedNewGrowthRate2 = (growthRate * timeSinceLast) /
-            ((1 days) / target);
+            ((7 days) / target);
 
         vm.assertGt(expectedNewGrowthRate2, expectedNewGrowthRate);
 
         vm.prank(user);
-        issuer.issue(address(burnableToken), 1e10);
+        issuer.issue(address(burnableToken), 1e10, user);
         vm.stopPrank();
 
         (, , , growthRate_post_mint) = issuer.whitelist(address(burnableToken));
@@ -265,11 +284,11 @@ contract IssuerTest is Test {
 
     function test_invalid_mint_target_should_fail() public {
         vm.expectRevert(abi.encodeWithSelector(InvalidMintTarget.selector, 0));
-        issuer.setLimits(100 ether, 1, 0);
+        issuer.setLimits(100, 1, 1, 0);
         vm.expectRevert(
             abi.encodeWithSelector(InvalidMintTarget.selector, 1001)
         );
-        issuer.setLimits(100 ether, 1, 1001);
+        issuer.setLimits(100, 1, 1, 1001);
     }
 
     function test_currentPrice_is_accurate() public {
@@ -300,27 +319,32 @@ contract IssuerTest is Test {
         vm.stopPrank();
 
         vm.prank(user);
-        issuer.issue(address(burnableToken), 35e17);
+        issuer.issue(address(burnableToken), 35e17, recipient);
         vm.stopPrank();
-        assertEq(flxBalance(user), 315e18, "Coupons should be minted");
+        assertEq(flxBalance(recipient), 315e18, "Coupons should be minted");
 
         uint burntAmount = burnableTotalSupplyBefore -
             burnableToken.totalSupply();
 
         assertEq(burntAmount, 35e17);
 
+        //failing from here
         vm.roll(block.number + 2);
         vm.warp(block.timestamp + 86600);
 
         vm.roll(block.number + 3);
 
-        uint balanceBefore = couponContract.balanceOf(user);
-        vm.prank(user);
+        uint balanceOfUserBefore = couponContract.balanceOf(user);
+        uint balanceBefore = couponContract.balanceOf(recipient);
+        vm.prank(recipient);
         tokenLockupPlan.redeemAllPlans();
-        vm.stopPrank();
-        uint balanceAfter = couponContract.balanceOf(user);
 
+        vm.stopPrank();
+        uint balanceAfter = couponContract.balanceOf(recipient);
+        uint balanceOfUserAfter = couponContract.balanceOf(user);
         vm.assertEq(balanceAfter - balanceBefore, 315e18);
+
+        vm.assertEq(balanceOfUserAfter - balanceOfUserBefore, 0);
     }
 
     //Note: coupons issued are fewer than 1
@@ -338,7 +362,7 @@ contract IssuerTest is Test {
         nonBurnableToken.approve(address(issuer), 100e18);
         vm.stopPrank();
         vm.prank(user);
-        issuer.issue(address(nonBurnableToken), 1e18);
+        issuer.issue(address(nonBurnableToken), 1e18, user);
         vm.stopPrank();
 
         assertEq(flxBalance(user), 864 ether, "Coupons should be minted");
@@ -348,33 +372,13 @@ contract IssuerTest is Test {
         assertEq(balanceOfTokenOnIssuer, 1e18);
     }
 
-    function test_excessive_minting() public {
-        nonBurnableToken.mint(address(this), 1e20);
-
-        uint currentTime = block.timestamp;
-        //reset token price to zero at current timestamp
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
-        vm.roll(block.number + 1);
-        //1 day in the future should mint 864 tokens per 1 token
-        vm.warp(currentTime + 86400);
-
-        nonBurnableToken.approve(address(issuer), 100e18);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                ExcessiveMinting.selector,
-                1728 ether,
-                1000 ether
-            )
-        );
-        issuer.issue(address(nonBurnableToken), 2e18);
-    }
-
     //when deploying on mainnet, we want to initially set growth low so that no one misses out
     function test_one_coupon_per_token_per_year_growth() public {
         //expection: 32150 tera is ONE per year.
 
         //resets price to zero
-        issuer.setLimits(100 ether, 1, 1);
+        uint target = 1;
+        issuer.setLimits(1000, 60, 180, target);
         issuer.setTokenInfo(address(nonBurnableToken), true, false, 32150);
         uint priceBefore = issuer.currentPrice(address(nonBurnableToken));
         vm.assertEq(priceBefore, 0);
@@ -393,7 +397,7 @@ contract IssuerTest is Test {
         nonBurnableToken.mint(user, 1 ether);
         vm.stopPrank();
         vm.prank(user);
-        issuer.issue(address(nonBurnableToken), 1 ether);
+        issuer.issue(address(nonBurnableToken), 1 ether, user);
         vm.stopPrank();
         uint flx_balanceAfter = flxBalance(user);
 
@@ -414,7 +418,7 @@ contract IssuerTest is Test {
         vm.prank(owner);
         nonBurnableToken.approve(address(issuer), 1e18);
         vm.expectRevert("Token not enabled for issuance");
-        issuer.issue(address(nonBurnableToken), 1e18);
+        issuer.issue(address(nonBurnableToken), 1e18, owner);
     }
 
     function test_access_control() public {
@@ -435,7 +439,7 @@ contract IssuerTest is Test {
                 notOwner
             )
         );
-        issuer.setLimits(10, 1, 1); // Should revert
+        issuer.setLimits(10, 1, 1, 1);
         vm.stopPrank();
     }
 }

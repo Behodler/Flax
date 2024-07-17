@@ -48,7 +48,7 @@ contract DeployContracts is Script {
         Issuer issuer = new Issuer(address(coupon), address(hedgeyAdapter));
         coupon.setMinter(address(issuer), true);
         PyroSCX_EYE.approve(address(issuer), uint(type(uint).max));
-        issuer.setLimits(100 ether, 1,1);
+        issuer.setLimits(10000, 180, 60, 1);
         issuer.setTokenInfo(
             address(mockInputTokenBurnable),
             true,
