@@ -20,7 +20,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
     mapping(address => TokenInfo) public whitelist;
     ICoupon public couponContract;
     HedgeyAdapter stream;
-    LockupConfig lockupConfig;
+    LockupConfig public lockupConfig;
     uint targetedMintsPerWeek;
 
     constructor(
