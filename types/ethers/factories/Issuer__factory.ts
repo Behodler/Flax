@@ -86,6 +86,29 @@ const _abi = [
   },
   {
     type: "function",
+    name: "lockupConfig",
+    inputs: [],
+    outputs: [
+      {
+        name: "threshold_size",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "days_multiple",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "offset",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "owner",
     inputs: [],
     outputs: [

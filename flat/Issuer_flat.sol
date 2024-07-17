@@ -3285,7 +3285,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
     mapping(address => TokenInfo) public whitelist;
     ICoupon public couponContract;
     HedgeyAdapter stream;
-    LockupConfig lockupConfig;
+    LockupConfig public lockupConfig;
     uint targetedMintsPerWeek;
 
     constructor(

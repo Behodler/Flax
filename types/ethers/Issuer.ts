@@ -31,6 +31,7 @@ export interface IssuerInterface extends utils.Interface {
     "couponContract()": FunctionFragment;
     "currentPrice(address)": FunctionFragment;
     "issue(address,uint256,address)": FunctionFragment;
+    "lockupConfig()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
@@ -46,6 +47,7 @@ export interface IssuerInterface extends utils.Interface {
       | "couponContract"
       | "currentPrice"
       | "issue"
+      | "lockupConfig"
       | "owner"
       | "renounceOwnership"
       | "setCouponContract"
@@ -67,6 +69,10 @@ export interface IssuerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "issue",
     values: [string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lockupConfig",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -104,6 +110,10 @@ export interface IssuerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "issue", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lockupConfig",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -234,6 +244,16 @@ export interface Issuer extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    lockupConfig(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        threshold_size: BigNumber;
+        days_multiple: BigNumber;
+        offset: BigNumber;
+      }
+    >;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
@@ -298,6 +318,16 @@ export interface Issuer extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  lockupConfig(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      threshold_size: BigNumber;
+      days_multiple: BigNumber;
+      offset: BigNumber;
+    }
+  >;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
@@ -361,6 +391,16 @@ export interface Issuer extends BaseContract {
       recipient: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    lockupConfig(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        threshold_size: BigNumber;
+        days_multiple: BigNumber;
+        offset: BigNumber;
+      }
+    >;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -473,6 +513,8 @@ export interface Issuer extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    lockupConfig(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
@@ -530,6 +572,8 @@ export interface Issuer extends BaseContract {
       recipient: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
+
+    lockupConfig(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
