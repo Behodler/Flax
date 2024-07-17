@@ -29,10 +29,9 @@ import type {
 export interface IIssuerInterface extends utils.Interface {
   functions: {
     "currentPrice(address)": FunctionFragment;
-    "issue(address,uint256)": FunctionFragment;
-    "mintAllowance()": FunctionFragment;
+    "issue(address,uint256,address)": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
-    "setLimits(uint256,uint256,uint256)": FunctionFragment;
+    "setLimits(uint256,uint256,uint256,uint256)": FunctionFragment;
     "setTokenInfo(address,bool,bool,uint256)": FunctionFragment;
     "setTokensInfo(address[],bool[],bool[],uint256[])": FunctionFragment;
   };
@@ -41,7 +40,6 @@ export interface IIssuerInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "currentPrice"
       | "issue"
-      | "mintAllowance"
       | "setCouponContract"
       | "setLimits"
       | "setTokenInfo"
@@ -54,11 +52,7 @@ export interface IIssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "issue",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintAllowance",
-    values?: undefined
+    values: [string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "setCouponContract",
@@ -66,7 +60,7 @@ export interface IIssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setLimits",
-    values: [BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setTokenInfo",
@@ -82,10 +76,6 @@ export interface IIssuerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "issue", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "mintAllowance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "setCouponContract",
     data: BytesLike
@@ -186,10 +176,7 @@ export interface IIssuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    mintAllowance(
+      recipient: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -199,9 +186,10 @@ export interface IIssuer extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockDuration: BigNumberish,
-      targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -227,10 +215,7 @@ export interface IIssuer extends BaseContract {
   issue(
     inputToken: string,
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  mintAllowance(
+    recipient: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -240,9 +225,10 @@ export interface IIssuer extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setLimits(
-    allowance: BigNumberish,
-    lockDuration: BigNumberish,
-    targetedMintsPerday: BigNumberish,
+    threshold_size: BigNumberish,
+    days_multiple: BigNumberish,
+    offset: BigNumberish,
+    _targetedMintsPerWeek: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -268,10 +254,9 @@ export interface IIssuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
+      recipient: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
 
     setCouponContract(
       newCouponAddress: string,
@@ -279,9 +264,10 @@ export interface IIssuer extends BaseContract {
     ): Promise<void>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockDuration: BigNumberish,
-      targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -347,10 +333,7 @@ export interface IIssuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
-    mintAllowance(
+      recipient: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -360,9 +343,10 @@ export interface IIssuer extends BaseContract {
     ): Promise<BigNumber>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockDuration: BigNumberish,
-      targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -392,10 +376,7 @@ export interface IIssuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    mintAllowance(
+      recipient: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -405,9 +386,10 @@ export interface IIssuer extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockDuration: BigNumberish,
-      targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

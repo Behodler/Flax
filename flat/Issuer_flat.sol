@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity =0.8.20 ^0.8.20;
 
 // lib/Locked_VestingTokenPlans/contracts/libraries/TimelockLibrary.sol
 
@@ -1323,8 +1323,8 @@ abstract contract ReentrancyGuard_1 {
 // src/Errors.sol
 
 error UnauthorizedMinter(address minter, bool hasMintingRight);
-error ExcessiveMinting (uint attemptedAmount, uint remaining);
 error InvalidMintTarget(uint target);
+error InvalidLockConfig(uint threshold_size,uint days_multiple,uint offset);
 
 // src/IIssuer.sol
 
@@ -1336,11 +1336,14 @@ abstract contract IIssuer {
         uint teraCouponPerTokenPerSecond;
     }
 
-    function mintAllowance() external virtual returns (uint);
-
     function currentPrice(address token) public view virtual returns (uint);
 
-    function setLimits(uint allowance, uint lockDuration,uint targetedMintsPerday) external virtual;
+    function setLimits(
+        uint threshold_size,
+        uint days_multiple,
+        uint offset,
+        uint _targetedMintsPerWeek
+    ) external virtual;
 
     function setTokenInfo(
         address token,
@@ -1350,15 +1353,19 @@ abstract contract IIssuer {
     ) external virtual;
 
     function setTokensInfo(
-address[] memory tokens,
+        address[] memory tokens,
         bool[] memory enabled,
         bool[] memory burnable,
-        uint [] memory startingRate
+        uint[] memory startingRate
     ) external virtual;
 
     function setCouponContract(address newCouponAddress) external virtual;
 
-    function issue(address inputToken, uint amount) external virtual returns (uint nft);
+    function issue(
+        address inputToken,
+        uint amount,
+        address recipient
+    ) external virtual returns (uint nft);
 
     // Events
     event TokenWhitelisted(
@@ -3267,21 +3274,19 @@ contract HedgeyAdapter {
 
 // src/Issuer.sol
 
-/*
-let T = time in secods since token last mint. Let G = flax_per_token_per_second. Start of at a rate such that price grows at 1 flax per token per day.
-If T > 1 day
-  factor = day/T
-else if T < day
-  factor = T/day
-*/
+// lockTime = offset + deposit/threshold_size * days_multiple;
+struct LockupConfig {
+    uint threshold_size; // in ether units
+    uint days_multiple; // number of extra days of locking
+    uint offset; //base number of lockup days
+}
 
 contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
     mapping(address => TokenInfo) public whitelist;
-    uint public override mintAllowance; //max mint allowance per tx
     ICoupon public couponContract;
     HedgeyAdapter stream;
-    uint public lockupDuration;
-    uint targetedMintsPerday;
+    LockupConfig lockupConfig;
+    uint targetedMintsPerWeek;
 
     constructor(
         address couponAddress,
@@ -3292,15 +3297,27 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
     }
 
     function setLimits(
-        uint allowance,
-        uint lockupDuration_Days,
-        uint _targetedMintsPerday
+        uint threshold_size,
+        uint days_multiple,
+        uint offset,
+        uint _targetedMintsPerWeek
     ) external override onlyOwner {
-        mintAllowance = allowance;
-        lockupDuration = lockupDuration_Days;
-        targetedMintsPerday = _targetedMintsPerday;
-        if (targetedMintsPerday == 0 || targetedMintsPerday >= (1000)) {
-            revert InvalidMintTarget(targetedMintsPerday);
+        if (
+            threshold_size > 20000 ||
+            days_multiple > 180 ||
+            offset > 4 * (365)
+        ) {
+            revert InvalidLockConfig(threshold_size, days_multiple, offset);
+        }
+
+        lockupConfig = LockupConfig({
+            days_multiple: days_multiple,
+            threshold_size: threshold_size,
+            offset: offset
+        });
+        targetedMintsPerWeek = _targetedMintsPerWeek;
+        if (_targetedMintsPerWeek == 0 || _targetedMintsPerWeek >= (1000)) {
+            revert InvalidMintTarget(_targetedMintsPerWeek);
         }
     }
 
@@ -3347,7 +3364,6 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
         couponContract = ICoupon(newCouponAddress);
     }
 
-    //TODO: new formula
     function currentPrice(
         address token
     ) public view override returns (uint teraCouponPerToken) {
@@ -3361,7 +3377,8 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
 
     function issue(
         address inputToken,
-        uint amount
+        uint amount,
+        address recipient
     ) external override nonReentrant returns (uint nft) {
         require(
             whitelist[inputToken].enabled,
@@ -3375,11 +3392,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
         // Calculate coupons to issue with precision adjustment
         uint coupons = (amount * currentPrice(inputToken)) / 1e12;
 
-        emit CouponsIssued(msg.sender, inputToken, amount, coupons);
-
-        if (coupons > mintAllowance) {
-            revert ExcessiveMinting(coupons, mintAllowance);
-        }
+        emit CouponsIssued(recipient, inputToken, amount, coupons);
 
         // Burn if applicable
         if (info.burnable) {
@@ -3390,13 +3403,17 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
 
         // Mint coupons
         couponContract.mint(coupons, address(stream));
-        nft = stream.lock(msg.sender, coupons, lockupDuration);
+        // lockTime = offset + deposit/threshold_size * days_multiple; 
+        uint lockupDuration = lockupConfig.offset +
+            (coupons / (lockupConfig.threshold_size * (1 ether))) *
+            lockupConfig.days_multiple;
+        nft = stream.lock(recipient, coupons, lockupDuration);
 
         uint timeSinceLastMint = block.timestamp - info.lastminted_timestamp;
         uint growth = info.teraCouponPerTokenPerSecond;
         growth =
             (growth * timeSinceLastMint) /
-            ((1 days) / targetedMintsPerday);
+            ((7 days) / targetedMintsPerWeek);
         //minimum 1 coupon per token per day growth
         growth = growth < 11574074 ? 11574074 : growth;
         info.lastminted_timestamp = block.timestamp;

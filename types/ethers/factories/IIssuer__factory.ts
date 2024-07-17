@@ -40,23 +40,15 @@ const _abi = [
         type: "uint256",
         internalType: "uint256",
       },
+      {
+        name: "recipient",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [
       {
         name: "nft",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "mintAllowance",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
         type: "uint256",
         internalType: "uint256",
       },
@@ -81,17 +73,22 @@ const _abi = [
     name: "setLimits",
     inputs: [
       {
-        name: "allowance",
+        name: "threshold_size",
         type: "uint256",
         internalType: "uint256",
       },
       {
-        name: "lockDuration",
+        name: "days_multiple",
         type: "uint256",
         internalType: "uint256",
       },
       {
-        name: "targetedMintsPerday",
+        name: "offset",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "_targetedMintsPerWeek",
         type: "uint256",
         internalType: "uint256",
       },

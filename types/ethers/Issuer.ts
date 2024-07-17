@@ -30,13 +30,11 @@ export interface IssuerInterface extends utils.Interface {
   functions: {
     "couponContract()": FunctionFragment;
     "currentPrice(address)": FunctionFragment;
-    "issue(address,uint256)": FunctionFragment;
-    "lockupDuration()": FunctionFragment;
-    "mintAllowance()": FunctionFragment;
+    "issue(address,uint256,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setCouponContract(address)": FunctionFragment;
-    "setLimits(uint256,uint256,uint256)": FunctionFragment;
+    "setLimits(uint256,uint256,uint256,uint256)": FunctionFragment;
     "setTokenInfo(address,bool,bool,uint256)": FunctionFragment;
     "setTokensInfo(address[],bool[],bool[],uint256[])": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
@@ -48,8 +46,6 @@ export interface IssuerInterface extends utils.Interface {
       | "couponContract"
       | "currentPrice"
       | "issue"
-      | "lockupDuration"
-      | "mintAllowance"
       | "owner"
       | "renounceOwnership"
       | "setCouponContract"
@@ -70,15 +66,7 @@ export interface IssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "issue",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lockupDuration",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintAllowance",
-    values?: undefined
+    values: [string, BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -91,7 +79,7 @@ export interface IssuerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setLimits",
-    values: [BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setTokenInfo",
@@ -116,14 +104,6 @@ export interface IssuerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "issue", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "lockupDuration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "mintAllowance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -250,12 +230,9 @@ export interface Issuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
+      recipient: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
-
-    lockupDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    mintAllowance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -269,9 +246,10 @@ export interface Issuer extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockupDuration_Days: BigNumberish,
-      _targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -316,12 +294,9 @@ export interface Issuer extends BaseContract {
   issue(
     inputToken: string,
     amount: BigNumberish,
+    recipient: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
-
-  lockupDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-  mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -335,9 +310,10 @@ export interface Issuer extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setLimits(
-    allowance: BigNumberish,
-    lockupDuration_Days: BigNumberish,
-    _targetedMintsPerday: BigNumberish,
+    threshold_size: BigNumberish,
+    days_multiple: BigNumberish,
+    offset: BigNumberish,
+    _targetedMintsPerWeek: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -382,12 +358,9 @@ export interface Issuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
+      recipient: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    lockupDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -399,9 +372,10 @@ export interface Issuer extends BaseContract {
     ): Promise<void>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockupDuration_Days: BigNumberish,
-      _targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -495,12 +469,9 @@ export interface Issuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
+      recipient: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
-
-    lockupDuration(overrides?: CallOverrides): Promise<BigNumber>;
-
-    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -514,9 +485,10 @@ export interface Issuer extends BaseContract {
     ): Promise<BigNumber>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockupDuration_Days: BigNumberish,
-      _targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -555,12 +527,9 @@ export interface Issuer extends BaseContract {
     issue(
       inputToken: string,
       amount: BigNumberish,
+      recipient: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
-
-    lockupDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    mintAllowance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -574,9 +543,10 @@ export interface Issuer extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setLimits(
-      allowance: BigNumberish,
-      lockupDuration_Days: BigNumberish,
-      _targetedMintsPerday: BigNumberish,
+      threshold_size: BigNumberish,
+      days_multiple: BigNumberish,
+      offset: BigNumberish,
+      _targetedMintsPerWeek: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

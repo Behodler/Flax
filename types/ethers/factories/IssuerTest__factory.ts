@@ -248,7 +248,7 @@ const _abi = [
   },
   {
     type: "function",
-    name: "test_excessive_minting",
+    name: "test_invalid_lock_config",
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",

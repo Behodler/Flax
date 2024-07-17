@@ -69,6 +69,11 @@ const _abi = [
         type: "uint256",
         internalType: "uint256",
       },
+      {
+        name: "recipient",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [
       {
@@ -78,32 +83,6 @@ const _abi = [
       },
     ],
     stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "lockupDuration",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "mintAllowance",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    stateMutability: "view",
   },
   {
     type: "function",
@@ -143,17 +122,22 @@ const _abi = [
     name: "setLimits",
     inputs: [
       {
-        name: "allowance",
+        name: "threshold_size",
         type: "uint256",
         internalType: "uint256",
       },
       {
-        name: "lockupDuration_Days",
+        name: "days_multiple",
         type: "uint256",
         internalType: "uint256",
       },
       {
-        name: "_targetedMintsPerday",
+        name: "offset",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "_targetedMintsPerWeek",
         type: "uint256",
         internalType: "uint256",
       },
@@ -372,15 +356,20 @@ const _abi = [
   },
   {
     type: "error",
-    name: "ExcessiveMinting",
+    name: "InvalidLockConfig",
     inputs: [
       {
-        name: "attemptedAmount",
+        name: "threshold_size",
         type: "uint256",
         internalType: "uint256",
       },
       {
-        name: "remaining",
+        name: "days_multiple",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "offset",
         type: "uint256",
         internalType: "uint256",
       },
