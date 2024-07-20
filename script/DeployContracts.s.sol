@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "forge-std/Script.sol";
 import "../src/Issuer.sol";
 import "../src/Coupon.sol";
+import "../src/Multicall3.sol";
 
 import {Vm} from "forge-std/Vm.sol";
 
@@ -13,6 +14,8 @@ contract DeployContracts is Script {
         DeployMulticall2 multi = new DeployMulticall2();
         vm.startBroadcast();
 
+        //Deploy Multicall3
+        Multicall3 multicall3 = new Multicall3();
         // Deploy Coupon
         Coupon coupon = new Coupon("Flax", "FLX");
         coupon.setMinter(msg.sender, true);
@@ -48,7 +51,7 @@ contract DeployContracts is Script {
         Issuer issuer = new Issuer(address(coupon), address(hedgeyAdapter));
         coupon.setMinter(address(issuer), true);
         PyroSCX_EYE.approve(address(issuer), uint(type(uint).max));
-        issuer.setLimits(10000, 180, 60, 1);
+        issuer.setLimits(1000, 60, 180, 1);
         issuer.setTokenInfo(
             address(mockInputTokenBurnable),
             true,
@@ -93,6 +96,8 @@ contract DeployContracts is Script {
                 addressToString.toAsciiString(address(issuer)),
                 '", "Multicall":"',
                 addressToString.toAsciiString(multicall2Address),
+                '", "Multicall3":"',
+                addressToString.toAsciiString(address(multicall3)),
                 '", "HedgeyAdapter":"',
                 addressToString.toAsciiString(address(hedgeyAdapter)),
                 '", "msgsender":"',
