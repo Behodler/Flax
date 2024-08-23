@@ -153,8 +153,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         growth =
             (growth * timeSinceLastMint) /
             ((7 days) / targetedMintsPerWeek);
-        //minimum 1 coupon per token per day growth
-        growth = growth < 11574074 ? 11574074 : growth;
+
         info.lastminted_timestamp = block.timestamp;
         info.teraCouponPerTokenPerSecond = growth;
 
