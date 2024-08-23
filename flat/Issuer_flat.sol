@@ -3284,7 +3284,7 @@ struct LockupConfig {
 contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
     mapping(address => TokenInfo) public whitelist;
     ICoupon public couponContract;
-    HedgeyAdapter stream;
+    HedgeyAdapter public stream;
     LockupConfig public lockupConfig;
     uint targetedMintsPerWeek;
 
@@ -3292,8 +3292,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
         address couponAddress,
         address streamAddress
     ) Ownable(msg.sender) {
-        couponContract = ICoupon(couponAddress);
-        stream = HedgeyAdapter(streamAddress);
+       setDependencies(couponAddress,streamAddress);
     }
 
     function setLimits(
@@ -3356,6 +3355,11 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard_1 {
             block.timestamp,
             initialGrowth
         );
+    }
+
+    function setDependencies(address couponAddress, address hedgeyAdapterAddress) public onlyOwner {
+        couponContract = ICoupon(couponAddress);
+        stream = HedgeyAdapter(hedgeyAdapterAddress);
     }
 
     function setCouponContract(

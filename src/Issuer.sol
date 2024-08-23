@@ -92,7 +92,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         );
     }
 
-    function setDependencies(address couponAddress, address hedgeyAdapterAddress) public {
+    function setDependencies(address couponAddress, address hedgeyAdapterAddress) public onlyOwner {
         couponContract = ICoupon(couponAddress);
         stream = HedgeyAdapter(hedgeyAdapterAddress);
     }
