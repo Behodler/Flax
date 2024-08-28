@@ -57,18 +57,26 @@ contract IssuerTest is Test {
 
         issuer.setLimits(10000, 60, 1, 1);
 
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
         issuer.setTokenInfo(
             address(nonBurnableToken),
             true,
             false,
-            standardGrowth
+            standardGrowth,
+            false
         );
         issuer.setTokenInfo(
             address(oneToOnetoken),
             true,
             false,
-            standardGrowth
+            standardGrowth,
+            false
         );
 
         notOwner = address(0x1);
@@ -106,19 +114,22 @@ contract IssuerTest is Test {
             bool enabled_burnable_before,
             bool burnable_burnable_before,
             ,
-            uint burnable_rate_before
+            uint burnable_rate_before,
+
         ) = issuer.whitelist(address(burnableToken));
         (
             bool enabled_non_before,
             bool burnable_non_before,
             ,
-            uint non_rate_before
+            uint non_rate_before,
+
         ) = issuer.whitelist(address(nonBurnableToken));
         (
             bool enabled_one_before,
             bool burnable_one_before,
             ,
-            uint burnable_one_rate_before
+            uint burnable_one_rate_before,
+
         ) = issuer.whitelist(address(oneToOnetoken));
 
         // Assertions for before state
@@ -138,6 +149,7 @@ contract IssuerTest is Test {
         bool[] memory enabled = new bool[](3);
         bool[] memory burnable = new bool[](3);
         uint[] memory rate = new uint[](3);
+        bool[] memory rewardsEnabled = new bool[](3);
         tokenAddresses[0] = address(burnableToken);
         tokenAddresses[1] = address(nonBurnableToken);
         tokenAddresses[2] = address(oneToOnetoken);
@@ -154,27 +166,40 @@ contract IssuerTest is Test {
         rate[1] = 40_000_000;
         rate[2] = 1000_000_000_000_000;
 
+        rewardsEnabled[0] = false;
+        rewardsEnabled[1] = true;
+        rewardsEnabled[2] = false;
+
         // Setting token info
-        issuer.setTokensInfo(tokenAddresses, enabled, burnable, rate);
+        issuer.setTokensInfo(
+            tokenAddresses,
+            enabled,
+            burnable,
+            rate,
+            rewardsEnabled
+        );
 
         // After state
         (
             bool enabled_burnable_after,
             bool burnable_burnable_after,
             ,
-            uint rate_burnable_after
+            uint rate_burnable_after,
+            bool rewards_burnable_enabled_after
         ) = issuer.whitelist(address(burnableToken));
         (
             bool enabled_non_after,
             bool burnable_non_after,
             ,
-            uint rate_non_after
+            uint rate_non_after,
+            bool rewards_burnable_non_after
         ) = issuer.whitelist(address(nonBurnableToken));
         (
             bool enabled_one_after,
             bool burnable_one_after,
             ,
-            uint rate_one_after
+            uint rate_one_after,
+            bool rewards_one_after
         ) = issuer.whitelist(address(oneToOnetoken));
 
         // Assertions for after state
@@ -188,6 +213,10 @@ contract IssuerTest is Test {
         vm.assertEq(rate_burnable_after, 20_000_000);
         vm.assertEq(rate_non_after, 40_000_000);
         vm.assertEq(rate_one_after, 1000_000_000_000_000);
+
+        vm.assertEq(rewards_burnable_enabled_after, false);
+        vm.assertEq(rewards_burnable_non_after, true);
+        vm.assertEq(rewards_one_after, false);
     }
 
     function test_dynamic_pricing_and_bounds_1_per_day() public {
@@ -197,7 +226,13 @@ contract IssuerTest is Test {
         burnableToken.mint(user, 100e18);
         uint currentTime = block.timestamp;
         //reset token price to zero at current timestamp
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
         vm.roll(block.number + 1);
         //2.5 hours in the future
         vm.warp(currentTime + 9000);
@@ -206,7 +241,7 @@ contract IssuerTest is Test {
         burnableToken.approve(address(issuer), 100e18);
         vm.stopPrank();
 
-        (, , uint lastMint, uint growthRate) = issuer.whitelist(
+        (, , uint lastMint, uint growthRate, ) = issuer.whitelist(
             address(burnableToken)
         );
         uint timeSinceLast = block.timestamp - lastMint;
@@ -219,7 +254,7 @@ contract IssuerTest is Test {
         issuer.issue(address(burnableToken), 1e10, user);
         vm.stopPrank();
 
-        (, , , uint newGrowthRate) = issuer.whitelist(address(burnableToken));
+        (, , , uint newGrowthRate, ) = issuer.whitelist(address(burnableToken));
 
         //1041666666
         vm.assertEq(newGrowthRate, expectedNewGrowthRate);
@@ -232,7 +267,13 @@ contract IssuerTest is Test {
         burnableToken.mint(user, 100e18);
         uint currentTime = block.timestamp;
         //reset token price to zero at current timestamp
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
         vm.roll(block.number + 1);
         //2.5 hours in the future
         vm.warp(currentTime + 9000);
@@ -241,7 +282,7 @@ contract IssuerTest is Test {
         burnableToken.approve(address(issuer), 100e18);
         vm.stopPrank();
 
-        (, , uint lastMint, uint growthRate) = issuer.whitelist(
+        (, , uint lastMint, uint growthRate, ) = issuer.whitelist(
             address(burnableToken)
         );
         uint timeSinceLast = block.timestamp - lastMint;
@@ -256,7 +297,7 @@ contract IssuerTest is Test {
         issuer.issue(address(burnableToken), 1e10, user);
         vm.stopPrank();
 
-        (, , , uint growthRate_post_mint) = issuer.whitelist(
+        (, , , uint growthRate_post_mint, ) = issuer.whitelist(
             address(burnableToken)
         );
 
@@ -267,7 +308,7 @@ contract IssuerTest is Test {
         //18 hours in the future
         vm.warp(currentTime + 64800);
 
-        (, , lastMint, growthRate) = issuer.whitelist(address(burnableToken));
+        (, , lastMint, growthRate, ) = issuer.whitelist(address(burnableToken));
         timeSinceLast = block.timestamp - lastMint;
         uint expectedNewGrowthRate2 = (growthRate * timeSinceLast) /
             ((7 days) / target);
@@ -278,7 +319,9 @@ contract IssuerTest is Test {
         issuer.issue(address(burnableToken), 1e10, user);
         vm.stopPrank();
 
-        (, , , growthRate_post_mint) = issuer.whitelist(address(burnableToken));
+        (, , , growthRate_post_mint, ) = issuer.whitelist(
+            address(burnableToken)
+        );
         vm.assertEq(growthRate_post_mint, expectedNewGrowthRate2);
     }
 
@@ -294,7 +337,13 @@ contract IssuerTest is Test {
     function test_currentPrice_is_accurate() public {
         uint currentTime = block.timestamp;
         //reset token price to zero at current timestamp
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
         vm.roll(block.number + 1);
         //2.5 hours in the future
         vm.warp(currentTime + 9000);
@@ -309,7 +358,13 @@ contract IssuerTest is Test {
 
         uint currentTime = block.timestamp;
         //reset token price to zero at current timestamp
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
         vm.roll(block.number + 1);
         //2.5 hours in the future
         vm.warp(currentTime + 9000);
@@ -353,7 +408,13 @@ contract IssuerTest is Test {
 
         uint currentTime = block.timestamp;
         //reset token price to zero at current timestamp
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth);
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
         vm.roll(block.number + 1);
         //1 day in the future should mint 864 tokens per 1 token
         vm.warp(currentTime + 86400);
@@ -379,7 +440,13 @@ contract IssuerTest is Test {
         //resets price to zero
         uint target = 1;
         issuer.setLimits(1000, 60, 180, target);
-        issuer.setTokenInfo(address(nonBurnableToken), true, false, 32150);
+        issuer.setTokenInfo(
+            address(nonBurnableToken),
+            true,
+            false,
+            32150,
+            false
+        );
         uint priceBefore = issuer.currentPrice(address(nonBurnableToken));
         vm.assertEq(priceBefore, 0);
         //jump 1 year
@@ -413,7 +480,8 @@ contract IssuerTest is Test {
             address(nonBurnableToken),
             false,
             false,
-            standardGrowth
+            standardGrowth,
+            false
         ); // Disable the token
         vm.prank(owner);
         nonBurnableToken.approve(address(issuer), 1e18);
@@ -429,7 +497,13 @@ contract IssuerTest is Test {
                 notOwner
             )
         );
-        issuer.setTokenInfo(address(burnableToken), true, true, standardGrowth); // Should revert
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        ); // Should revert
         vm.stopPrank();
 
         vm.startPrank(address(0x1));
@@ -441,5 +515,135 @@ contract IssuerTest is Test {
         );
         issuer.setLimits(10, 1, 1, 1);
         vm.stopPrank();
+    }
+
+    function test_switch_custom_reward_token_flushes_old_balance() public {
+        MockToken reward1 = new MockToken("Reward", "V1");
+        reward1.mint(address(issuer), 4 ether);
+        uint balanceOfCallerBefore = reward1.balanceOf(address(this));
+
+        vm.assertEq(balanceOfCallerBefore, 0);
+
+        issuer.setRewardConfig(address(reward1), 10 ether, 1 ether);
+
+        MockToken reward2 = new MockToken("Reward", "V2");
+
+        issuer.setRewardConfig(address(reward2), 2 ether, 1 ether);
+
+        uint balanceOfCallerAfter = reward1.balanceOf(address(this));
+
+        vm.assertEq(balanceOfCallerAfter, 4 ether);
+    }
+
+    function test_reward_token_flax_threshold_too_low_fails() public {
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                minFlaxMintThresholdTooLow.selector,
+                1 ether - 1
+            )
+        );
+        issuer.setRewardConfig(address(burnableToken), 1 ether - 1, 1 ether);
+    }
+
+    function test_mint_below_and_above_reward_threshold() public {
+        MockToken reward1 = new MockToken("Reward", "V1");
+        reward1.mint(address(issuer), 2000 ether);
+        issuer.setLimits(8000, 40, 180, 1);
+        issuer.setRewardConfig(address(reward1), 10 ether, 12 ether);
+        issuer.setTokenInfo(address(burnableToken), true, true, 11574074, true);
+
+        //price = (duration*teraCouponPerSecon)/1e12
+        //=> price*1e12 = (duration*teraCouponPerSecond)
+        //=>duration = (price*1e12)/teraCouponPerSecond
+        vm.deal(user, 1 ether);
+        vm.prank(user);
+        burnableToken.approve(address(issuer), type(uint).max);
+        vm.stopPrank();
+        burnableToken.mint(user, 20 ether);
+        vm.warp(block.timestamp + 1 days);
+        vm.roll(block.number + 1);
+
+        uint rewardBalanceBefore = reward1.balanceOf(user);
+        vm.assertEq(rewardBalanceBefore, 0);
+        //mint above threshold
+        vm.prank(user);
+        issuer.issue(address(burnableToken), 11 ether, user);
+        vm.stopPrank();
+        uint rewardBalanceAfter = reward1.balanceOf(user);
+        vm.assertEq(rewardBalanceAfter, 12 ether);
+
+        vm.warp(block.timestamp + 1 days);
+        vm.roll(block.number + 1);
+
+        //mint below flax threshold
+        vm.prank(user);
+        issuer.issue(address(burnableToken), 1 ether, user);
+
+        uint rewardBalanceAfterBelow = reward1.balanceOf(user);
+        vm.assertEq(rewardBalanceAfterBelow, 12 ether);
+    }
+
+    function test_mint_above_threshold_does_nothing_for_disabled() public {
+        MockToken reward1 = new MockToken("Reward", "V1");
+        reward1.mint(address(issuer), 2000 ether);
+
+        issuer.setRewardConfig(address(reward1), 10 ether, 12 ether);
+        issuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
+
+        //price = (duration*teraCouponPerSecon)/1e12
+        //=> price*1e12 = (duration*teraCouponPerSecond)
+        //=>duration = (price*1e12)/teraCouponPerSecond
+        uint durationPerToken = (10 ether * 1e12) / 10_000_000;
+        vm.deal(user, 1 ether);
+        vm.prank(user);
+        burnableToken.approve(address(issuer), type(uint).max);
+        vm.stopPrank();
+        burnableToken.mint(user, 20 ether);
+        vm.warp(block.timestamp + (durationPerToken) / 10);
+
+        uint rewardBalanceBefore = reward1.balanceOf(user);
+        vm.assertEq(rewardBalanceBefore, 0);
+        //mint above threshold
+        vm.prank(user);
+        issuer.issue(address(burnableToken), 20 ether, user);
+        vm.stopPrank();
+        uint rewardBalanceAfter = reward1.balanceOf(user);
+        vm.assertEq(rewardBalanceAfter, 0 ether);
+    }
+
+    function test_mint_when_balance_of_reward_token_too_low_does_nothing()
+        public
+    {
+        MockToken reward1 = new MockToken("Reward", "V1");
+        reward1.mint(address(issuer), 12 ether -1);
+        issuer.setLimits(8000, 40, 180, 1);
+        issuer.setRewardConfig(address(reward1), 10 ether, 12 ether);
+        issuer.setTokenInfo(address(burnableToken), true, true, 11574074, true);
+
+        //price = (duration*teraCouponPerSecon)/1e12
+        //=> price*1e12 = (duration*teraCouponPerSecond)
+        //=>duration = (price*1e12)/teraCouponPerSecond
+        vm.deal(user, 1 ether);
+        vm.prank(user);
+        burnableToken.approve(address(issuer), type(uint).max);
+        vm.stopPrank();
+        burnableToken.mint(user, 20 ether);
+        vm.warp(block.timestamp + 1 days);
+        vm.roll(block.number + 1);
+
+        uint rewardBalanceBefore = reward1.balanceOf(user);
+        vm.assertEq(rewardBalanceBefore, 0);
+        //mint above threshold
+        vm.prank(user);
+        issuer.issue(address(burnableToken), 11 ether, user);
+        vm.stopPrank();
+        uint rewardBalanceAfter = reward1.balanceOf(user);
+        vm.assertEq(rewardBalanceAfter, 0);
     }
 }

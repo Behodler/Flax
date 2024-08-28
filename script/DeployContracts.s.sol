@@ -56,16 +56,18 @@ contract DeployContracts is Script {
             address(mockInputTokenBurnable),
             true,
             true,
-            10_000_000_000
+            10_000_000_000,
+            true
         );
-        issuer.setTokenInfo(address(SCX), true, true, 10_000_000_000);
-        issuer.setTokenInfo(address(PyroSCX_EYE), true, true, 10_000_000_000);
+        issuer.setTokenInfo(address(SCX), true, true, 10_000_000_000,true);
+        issuer.setTokenInfo(address(PyroSCX_EYE), true, true, 10_000_000_000,true);
 
         issuer.setTokenInfo(
             address(mockInputTokenNonBurnable),
             true,
             false,
-            10_000_000_000
+            10_000_000_000,
+            true
         );
 
         vm.stopBroadcast();

@@ -20,7 +20,7 @@
     "generate-types": "typechain --target ethers-v5 --out-dir types/ethers './abis/*.json'",
     "move-artifacts": "cp ABIs.json ../coupon-ui/src/constants/ && cp -R types ../coupon-ui/src/typechain",
     "build-independent": "rm flat/* && forge build && yarn run extract-abis && yarn compile-abi-file && yarn run generate-types && yarn flatten && yarn move-artifacts",
-    "build": "yarn build-independent && yarn move-artifacts"
+    "build": "yarn build-independent"
   },
   "repository": {
     "type": "git",

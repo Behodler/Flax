@@ -7,6 +7,7 @@ abstract contract IIssuer {
         bool burnable;
         uint lastminted_timestamp;
         uint teraCouponPerTokenPerSecond;
+        bool extraRewardEnabled;
     }
 
     function currentPrice(address token) public view virtual returns (uint);
@@ -22,15 +23,23 @@ abstract contract IIssuer {
         address token,
         bool enabled,
         bool burnable,
-        uint startingRate
+        uint startingRate,
+        bool extraRewardEnabled
     ) external virtual;
 
     function setTokensInfo(
         address[] memory tokens,
         bool[] memory enabled,
         bool[] memory burnable,
-        uint[] memory startingRate
+        uint[] memory startingRate,
+        bool[] memory extraRewardEnabled
     ) external virtual;
+
+    function setRewardConfig(
+        address token,
+        uint minFlaxMintThreshold,
+        uint rewardSize
+    ) public virtual;
 
     function setCouponContract(address newCouponAddress) external virtual;
 

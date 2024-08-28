@@ -16,18 +16,25 @@ struct LockupConfig {
     uint offset; //base number of lockup days
 }
 
+struct CustomTokenRewardConfig {
+    address token;
+    uint minFlaxMintThreshold;
+    uint rewardSize;
+}
+
 contract Issuer is IIssuer, Ownable, ReentrancyGuard {
     mapping(address => TokenInfo) public whitelist;
     ICoupon public couponContract;
     HedgeyAdapter public stream;
     LockupConfig public lockupConfig;
-    uint targetedMintsPerWeek;
+    uint public targetedMintsPerWeek;
+    CustomTokenRewardConfig public customTokenReward;
 
     constructor(
         address couponAddress,
         address streamAddress
     ) Ownable(msg.sender) {
-       setDependencies(couponAddress,streamAddress);
+        setDependencies(couponAddress, streamAddress);
     }
 
     function setLimits(
@@ -37,9 +44,7 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         uint _targetedMintsPerWeek
     ) external override onlyOwner {
         if (
-            threshold_size > 20000 ||
-            days_multiple > 180 ||
-            offset > 4 * (365)
+            threshold_size > 20000 || days_multiple > 180 || offset > 4 * (365)
         ) {
             revert InvalidLockConfig(threshold_size, days_multiple, offset);
         }
@@ -59,10 +64,17 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         address[] memory tokens,
         bool[] memory enabled,
         bool[] memory burnable,
-        uint[] memory startingRate
+        uint[] memory startingRate,
+        bool[] memory extraRewardEnabled
     ) external override onlyOwner {
         for (uint i = 0; i < tokens.length; i++) {
-            _setTokenInfo(tokens[i], enabled[i], burnable[i], startingRate[i]);
+            _setTokenInfo(
+                tokens[i],
+                enabled[i],
+                burnable[i],
+                startingRate[i],
+                extraRewardEnabled[i]
+            );
         }
         emit TokensWhiteListed(tokens, enabled, block.timestamp);
     }
@@ -71,9 +83,16 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         address token,
         bool enabled,
         bool burnable,
-        uint startingRate
+        uint startingRate,
+        bool extraRewardEnabled
     ) external override onlyOwner {
-        _setTokenInfo(token, enabled, burnable, startingRate);
+        _setTokenInfo(
+            token,
+            enabled,
+            burnable,
+            startingRate,
+            extraRewardEnabled
+        );
 
         emit TokenWhitelisted(token, enabled, burnable, block.timestamp);
     }
@@ -82,17 +101,22 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         address token,
         bool enabled,
         bool burnable,
-        uint initialGrowth
+        uint initialGrowth,
+        bool extraRewardEnabled
     ) private {
         whitelist[token] = TokenInfo(
             enabled,
             burnable,
             block.timestamp,
-            initialGrowth
+            initialGrowth,
+            extraRewardEnabled
         );
     }
 
-    function setDependencies(address couponAddress, address hedgeyAdapterAddress) public onlyOwner {
+    function setDependencies(
+        address couponAddress,
+        address hedgeyAdapterAddress
+    ) public onlyOwner {
         couponContract = ICoupon(couponAddress);
         stream = HedgeyAdapter(hedgeyAdapterAddress);
     }
@@ -101,6 +125,28 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
         address newCouponAddress
     ) external override onlyOwner {
         couponContract = ICoupon(newCouponAddress);
+    }
+
+    function setRewardConfig(
+        address token,
+        uint minFlaxMintThreshold,
+        uint rewardSize
+    ) public override onlyOwner {
+        if (customTokenReward.token != address(0)) {
+            //Flush current rewards
+            IERC20 currentRewardToken = IERC20(customTokenReward.token);
+            uint balanceOfCurrentToken = currentRewardToken.balanceOf(
+                address(this)
+            );
+            currentRewardToken.transfer(owner(), balanceOfCurrentToken);
+        }
+
+        customTokenReward.minFlaxMintThreshold = minFlaxMintThreshold;
+        customTokenReward.token = token;
+        customTokenReward.rewardSize = rewardSize;
+        if (minFlaxMintThreshold < 1 ether) {
+            revert minFlaxMintThresholdTooLow(minFlaxMintThreshold);
+        }
     }
 
     function currentPrice(
@@ -139,10 +185,21 @@ contract Issuer is IIssuer, Ownable, ReentrancyGuard {
                 revert("Failed to burn the input token");
             }
         }
+        if (
+            info.extraRewardEnabled &&
+            coupons >= customTokenReward.minFlaxMintThreshold &&
+            customTokenReward.token != address(0)
+        ) {
+            IERC20 customToken = IERC20(customTokenReward.token);
+            uint balance = customToken.balanceOf(address(this));
+            if (balance >= customTokenReward.rewardSize) {
+                customToken.transfer(recipient, customTokenReward.rewardSize);
+            }
+        }
 
         // Mint coupons
         couponContract.mint(coupons, address(stream));
-        // lockTime = offset + deposit/threshold_size * days_multiple; 
+        // lockTime = offset + deposit/threshold_size * days_multiple;
         uint lockupDuration = lockupConfig.offset +
             (coupons / (lockupConfig.threshold_size * (1 ether))) *
             lockupConfig.days_multiple;
