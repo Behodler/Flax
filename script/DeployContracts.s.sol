@@ -48,7 +48,11 @@ contract DeployContracts is Script {
             address(coupon),
             address(tokenLockupPlan)
         );
-        Issuer issuer = new Issuer(address(coupon), address(hedgeyAdapter));
+        Issuer issuer = new Issuer(
+            address(coupon),
+            address(hedgeyAdapter),
+            true
+        );
         coupon.setMinter(address(issuer), true);
         PyroSCX_EYE.approve(address(issuer), uint(type(uint).max));
         issuer.setLimits(1000, 60, 180, 1);
@@ -59,8 +63,14 @@ contract DeployContracts is Script {
             10_000_000_000,
             true
         );
-        issuer.setTokenInfo(address(SCX), true, true, 10_000_000_000,true);
-        issuer.setTokenInfo(address(PyroSCX_EYE), true, true, 10_000_000_000,true);
+        issuer.setTokenInfo(address(SCX), true, true, 10_000_000_000, true);
+        issuer.setTokenInfo(
+            address(PyroSCX_EYE),
+            true,
+            true,
+            10_000_000_000,
+            true
+        );
 
         issuer.setTokenInfo(
             address(mockInputTokenNonBurnable),

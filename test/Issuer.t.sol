@@ -5,6 +5,8 @@ import "forge-std/Test.sol";
 import "../src/Issuer.sol";
 import "../src/Coupon.sol";
 import "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol";
+
 import "../src/Errors.sol";
 import "../src/HedgeyAdapter.sol";
 import {TokenLockupPlans} from "@hedgey/lockup/TokenLockupPlans.sol";
@@ -52,7 +54,11 @@ contract IssuerTest is Test {
             address(tokenLockupPlan)
         );
 
-        issuer = new Issuer(address(couponContract), address(hedgeyAdapter));
+        issuer = new Issuer(
+            address(couponContract),
+            address(hedgeyAdapter),
+            true
+        );
         couponContract.setMinter(address(issuer), true);
 
         issuer.setLimits(10000, 60, 1, 1);
@@ -373,10 +379,22 @@ contract IssuerTest is Test {
         burnableToken.approve(address(issuer), 100e18);
         vm.stopPrank();
 
+        //also test that minting token makes no additional transfers
+        couponContract.setMinter(address(this), true);
+        couponContract.mint(100 ether, address(issuer));
+        uint flaxBalanceOnIssuerBefore = couponContract.balanceOf(
+            address(issuer)
+        );
+
         vm.prank(user);
         issuer.issue(address(burnableToken), 35e17, recipient);
         vm.stopPrank();
         assertEq(flxBalance(recipient), 315e18, "Coupons should be minted");
+
+        uint flaxBalanceOnIssuerAfter = couponContract.balanceOf(
+            address(issuer)
+        );
+        vm.assertEq(flaxBalanceOnIssuerAfter, flaxBalanceOnIssuerBefore);
 
         uint burntAmount = burnableTotalSupplyBefore -
             burnableToken.totalSupply();
@@ -621,7 +639,7 @@ contract IssuerTest is Test {
         public
     {
         MockToken reward1 = new MockToken("Reward", "V1");
-        reward1.mint(address(issuer), 12 ether -1);
+        reward1.mint(address(issuer), 12 ether - 1);
         issuer.setLimits(8000, 40, 180, 1);
         issuer.setRewardConfig(address(reward1), 10 ether, 12 ether);
         issuer.setTokenInfo(address(burnableToken), true, true, 11574074, true);
@@ -645,5 +663,87 @@ contract IssuerTest is Test {
         vm.stopPrank();
         uint rewardBalanceAfter = reward1.balanceOf(user);
         vm.assertEq(rewardBalanceAfter, 0);
+    }
+
+    function test_non_minting_with_insufficient_balance_fails() public {
+        Issuer nonMintingIssuer = new Issuer(
+            address(couponContract),
+            address(hedgeyAdapter),
+            false
+        );
+        burnableToken.mint(user, 100e18);
+        nonMintingIssuer.setLimits(10000, 60, 1, 1);
+        uint currentTime = block.timestamp;
+        //reset token price to zero at current timestamp
+        nonMintingIssuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
+        vm.roll(block.number + 1);
+        //2.5 hours in the future
+        vm.warp(currentTime + 9000);
+
+        vm.prank(user);
+        burnableToken.approve(address(nonMintingIssuer), 100e18);
+        vm.stopPrank();
+
+        couponContract.setMinter(address(this), true);
+        couponContract.mint(315e18 - 1, address(nonMintingIssuer));
+        vm.prank(user);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IERC20Errors.ERC20InsufficientBalance.selector,
+                address(nonMintingIssuer),
+                315e18 - 1,
+                315e18
+            )
+        );
+        nonMintingIssuer.issue(address(burnableToken), 35e17, recipient);
+    }
+
+    function test_non_mint_with_sufficient_balance_succeeds() public {
+        Issuer nonMintingIssuer = new Issuer(
+            address(couponContract),
+            address(hedgeyAdapter),
+            false
+        );
+        burnableToken.mint(user, 100e18);
+        nonMintingIssuer.setLimits(10000, 60, 1, 1);
+        uint currentTime = block.timestamp;
+        //reset token price to zero at current timestamp
+        nonMintingIssuer.setTokenInfo(
+            address(burnableToken),
+            true,
+            true,
+            standardGrowth,
+            false
+        );
+        vm.roll(block.number + 1);
+        //2.5 hours in the future
+        vm.warp(currentTime + 9000);
+
+        vm.prank(user);
+        burnableToken.approve(address(nonMintingIssuer), 100e18);
+        vm.stopPrank();
+
+        couponContract.setMinter(address(this), true);
+        couponContract.mint(315e18, address(nonMintingIssuer));
+
+        uint total_flax_supply_before = couponContract.totalSupply();
+        vm.prank(user);
+        nonMintingIssuer.issue(address(burnableToken), 35e17, recipient);
+        vm.stopPrank();
+        assertEq(
+            flxBalance(recipient),
+            315e18,
+            "Coupons should be transferred"
+        );
+
+        uint total_flax_supply_after = couponContract.totalSupply();
+        //assert no new minting
+        vm.assertEq(total_flax_supply_after, total_flax_supply_before);
     }
 }
